@@ -38,9 +38,9 @@ Accurate and specific is the goal.
 
 ## Attribution rules — important
 
-The TeLLMe and CityOS work is **collaborative research** at Rutgers with the NSF Center for
-Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and Shuren Xia.
-It is **not** Vihaan's solo work.
+The TeLLMe and CityOS work is **collaborative research** at Rutgers WINLAB with the NSF
+Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and
+Shuren Xia. Vihaan joined in 2026. It is **not** Vihaan's solo work.
 
 His actual contribution was the TeLLMe frontend plus the API integration layer binding the
 smart-room sensors and the CARLA simulator to the query pipeline, and getting the system
@@ -60,7 +60,6 @@ without Prof. Ortiz's permission. This repo only *describes* the research, which
 
 ## Still unconfirmed
 
-- NSF CS3 start date and campus (marked `# [CONFIRM]` in `content.py`)
 - Whether the named collaborators are happy to appear on a public site
 - Portrait is intentionally absent — About shows a "VR" monogram until
   `frontend/public/portrait.jpg` exists

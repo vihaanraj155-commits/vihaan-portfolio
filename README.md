@@ -14,8 +14,6 @@ of the way. Light and dark themes are both first-class.
 Details are taken from `Vihaan_Rajagopal_Resume_2026.docx` and from Vihaan directly. What
 remains:
 
-- [ ] **NSF CS3 start date and campus** — the research entry says "2025 — Present" in
-      New Brunswick; both are inferred (`# [CONFIRM]` in `content.py`)
 - [ ] **Collaborator names** — the research projects publicly credit Prof. Jorge Ortiz and
       PhD mentors Taqiya Ehsan and Shuren Xia. Confirm they are happy to be named on a public
       site before it goes live.
@@ -25,7 +23,8 @@ remains:
       and `sitemap.xml`
 
 Confirmed and in place: name, email, location, GitHub, education, all seven experience
-entries, project attribution, and the real résumé PDF.
+entries, the WINLAB / NSF CS3 affiliation and 2026 start, project attribution, and the real
+résumé PDF.
 
 ### How attribution works
 

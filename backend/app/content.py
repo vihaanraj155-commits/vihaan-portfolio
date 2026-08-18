@@ -39,7 +39,7 @@ PROFILE = Profile(
         "was in it."
     ),
     bio_short=(
-        "I work on smart-space research at Rutgers with the NSF Center for Smart "
+        "I work on smart-space research at Rutgers WINLAB with the NSF Center for Smart "
         "Streetscapes, compete in cybersecurity and robotics, and build the software that "
         "turns research systems into something people can actually use."
     ),
@@ -49,7 +49,7 @@ PROFILE = Profile(
         "it to a model, and hope — gives away identities and raw footage in exchange for "
         "convenience. The research I contribute to is about the harder version: deciding what "
         "a system is allowed to know before it is allowed to answer.",
-        "I work on that with a team at Rutgers University, part of the NSF Center for Smart "
+        "I work on that with a team at Rutgers WINLAB, part of the NSF Center for Smart "
         "Streetscapes, led by Prof. Jorge Ortiz and with PhD mentors Taqiya Ehsan and Shuren "
         "Xia. My own contribution has been mostly on TeLLMe, the query system: I built the "
         "frontend and the integration layer that binds a live instrumented room and the CARLA "
@@ -83,7 +83,7 @@ PROFILE = Profile(
 # --------------------------------------------------------------------------------------
 
 RESEARCH_CONTEXT = (
-    "Collaborative research at Rutgers University with the NSF Center for Smart Streetscapes, "
+    "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, "
     "led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and Shuren Xia alongside other "
     "graduate and undergraduate researchers."
 )
@@ -93,7 +93,7 @@ PROJECTS: list[Project] = [
         slug="tellme-interface",
         title="TeLLMe Interface & Integration",
         subtitle="Privacy-preserving smart-space query",
-        year="2025 — 2026",
+        year="2026",
         role="Frontend architecture & systems integration",
         featured=True,
         accent="violet",
@@ -154,7 +154,7 @@ PROJECTS: list[Project] = [
         slug="tellme-harness",
         title="TeLLMe Harness",
         subtitle="Deterministic privacy routing",
-        year="2025 — 2026",
+        year="2026",
         role="Research contributor",
         featured=False,
         accent="teal",
@@ -205,7 +205,7 @@ PROJECTS: list[Project] = [
         slug="cityos-agentic-stack-planner",
         title="CityOS Agentic Stack Planner",
         subtitle="Verified multi-agent coordination",
-        year="2025 — 2026",
+        year="2026",
         role="Research contributor",
         featured=False,
         accent="blue",
@@ -312,8 +312,8 @@ EXPERIENCE: list[ExperienceItem] = [
     ExperienceItem(
         org="Rutgers University — NSF Center for Smart Streetscapes (CS3)",
         role="Student Researcher",
-        period="2025 — Present",  # [CONFIRM] start date
-        location="New Brunswick, NJ",  # [CONFIRM]
+        period="2026 — Present",
+        location="WINLAB, Rutgers University",
         summary=(
             "Research on privacy-bounded smart-space query systems with Prof. Jorge Ortiz, "
             "PhD mentors Taqiya Ehsan and Shuren Xia, and a team of graduate and undergraduate "
