@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>Vihaan Rajagopal — Student Researcher &amp; Developer</title>
+    <meta
+      name="description"
+      content="Vihaan Rajagopal is a student researcher working on smart-space systems, cybersecurity, and applied AI — NSF Center for Smart Streetscapes, VEX Robotics, and product engineering."
+    />
+    <meta name="author" content="Vihaan Rajagopal" />
+    <link rel="canonical" href="https://vihaanrajagopal.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Vihaan Rajagopal — Student Researcher &amp; Developer" />
+    <meta
+      property="og:description"
+      content="I build systems for smart spaces that are secure and private by design."
+    />
+    <meta property="og:url" content="https://vihaanrajagopal.com/" />
+    <meta property="og:image" content="/og-image.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Vihaan Rajagopal",
+        "jobTitle": "Student Researcher & Developer",
+        "url": "https://vihaanrajagopal.com/",
+        "alumniOf": "Edison High School",
+        "knowsAbout": [
+          "Smart-space systems",
+          "Cybersecurity",
+          "Cloud computing",
+          "Applied AI and LLMs",
+          "Robotics"
+        ]
+      }
+    </script>
+
+    <!--
+      Theme must be resolved before first paint, or a dark-mode visitor sees a white flash.
+      This runs synchronously and deliberately blocks rendering for the microsecond it takes.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var theme = stored === "light" || stored === "dark" ? stored : prefersDark ? "dark" : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+# Runtime dependencies for the Docker image.
+# Regenerate deliberately, not with a bare `pip freeze` -- that emits an editable
+# `-e c:\...` line for the local package, which breaks the image build.
+fastapi==0.141.1
+uvicorn[standard]==0.52.3
+pydantic==2.13.4
+pydantic-settings==2.15.0
+email-validator==2.3.0
+python-dotenv==1.2.3

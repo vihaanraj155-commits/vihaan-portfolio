@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+/*
+  Themes are driven by [data-theme] rather than the OS media query, so Tailwind's `dark:`
+  variant has to be redefined to match. Without this, `dark:` would follow the system
+  preference and disagree with the toggle.
+*/
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------------------------
+   Design tokens.
+
+   Themes switch by swapping these variables on <html data-theme>, then Tailwind utilities
+   are mapped onto them in the @theme inline block below. That indirection is what lets a
+   single class like `bg-canvas` be correct in both themes without any dark: variants.
+   ------------------------------------------------------------------------------------ */
+
+:root {
+  --canvas: #fbfbfd;
+  --surface: #ffffff;
+  --surface-2: #f5f5f7;
+  /*
+    The three text steps are tuned so even the faintest one clears WCAG AA (4.5:1) on the
+    canvas. Apple's own #86868b is prettier here but lands at 3.5:1, which is not usable for
+    the captions and metadata this token is applied to.
+  */
+  --text: #1d1d1f;
+  --text-mut: #5a5a5f;
+  --text-fade: #6e6e73;
+  --hairline: rgb(0 0 0 / 0.09);
+  --hairline-strong: rgb(0 0 0 / 0.16);
+  --accent: #0071e3;
+  --accent-hi: #0077ed;
+  --accent-soft: rgb(0 113 227 / 0.1);
+  /* Text drawn on top of an accent fill. */
+  --accent-contrast: #ffffff;
+
+  --tint-blue: #0071e3;
+  --tint-violet: #6e4ff6;
+  --tint-teal: #0a8c7e;
+  --tint-amber: #b25e09;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.05), 0 16px 40px rgb(0 0 0 / 0.1);
+}
+
+[data-theme="dark"] {
+  --canvas: #000000;
+  --surface: #0c0c0e;
+  --surface-2: #161618;
+  --text: #f5f5f7;
+  --text-mut: #a1a1a6;
+  --text-fade: #8e8e93;
+  --hairline: rgb(255 255 255 / 0.11);
+  --hairline-strong: rgb(255 255 255 / 0.2);
+  --accent: #2997ff;
+  --accent-hi: #47a6ff;
+  --accent-soft: rgb(41 151 255 / 0.14);
+  /*
+    White on this bright blue is only 3:1. Near-black on it is ~7:1, which is also what the
+    Apple and Material dark palettes do with a vivid accent fill.
+  */
+  --accent-contrast: #0a0a0c;
+
+  --tint-blue: #2997ff;
+  --tint-violet: #a78bfa;
+  --tint-teal: #2dd4bf;
+  --tint-amber: #fbbf24;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 32px rgb(0 0 0 / 0.45);
+  --shadow-lift: 0 2px 6px rgb(0 0 0 / 0.55), 0 20px 48px rgb(0 0 0 / 0.55);
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--text);
+  --color-muted: var(--text-mut);
+  --color-fade: var(--text-fade);
+  --color-accent: var(--accent);
+  --color-accent-hi: var(--accent-hi);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+
+  --color-tint-blue: var(--tint-blue);
+  --color-tint-violet: var(--tint-violet);
+  --color-tint-teal: var(--tint-teal);
+  --color-tint-amber: var(--tint-amber);
+
+  --font-sans: "Inter Variable", ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui,
+    "Segoe UI", sans-serif;
+
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ------------------------------------------------------------------------------------
+   Base layer
+   ------------------------------------------------------------------------------------ */
+
+@layer base {
+  * {
+    border-color: var(--hairline);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-synthesis-weight: none;
+    /*
+      No transition on theme change, deliberately. Only body would animate while every other
+      element (headings, cards, hairlines) switches instantly, and during those 300ms the new
+      text colour sits on the old background -- briefly unreadable. An instant switch is both
+      cleaner and safer.
+    */
+  }
+
+  /* Anchor targets must clear the fixed header. */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--text);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ------------------------------------------------------------------------------------
+   Typography utilities. The tight negative tracking on large sizes is the single biggest
+   contributor to the "designed" feel -- default tracking at 4rem looks amateur.
+   ------------------------------------------------------------------------------------ */
+
+@utility text-display {
+  font-size: clamp(2.75rem, 7vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+
+@utility text-h2 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+  font-weight: 600;
+}
+
+@utility text-h3 {
+  font-size: 1.375rem;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+@utility text-lead {
+  font-size: clamp(1.125rem, 2vw, 1.3125rem);
+  line-height: 1.55;
+  letter-spacing: -0.011em;
+  font-weight: 400;
+}
+
+@utility text-caption {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------------------------
+   Motion. Reveals are also gated in JS (use-reveal.ts) so that reduced-motion users get
+   final-state content immediately rather than a faster animation.
+   ------------------------------------------------------------------------------------ */
+
+@utility reveal-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@utility reveal-shown {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

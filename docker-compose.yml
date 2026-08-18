@@ -1,0 +1,30 @@
+# Production-ish stack: FastAPI behind an nginx that serves the built React bundle and
+# reverse-proxies /api. Single origin, so CORS never applies.
+
+services:
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: production
+      # Same origin via nginx, so no cross-origin browser requests to allow.
+      CORS_ORIGINS: ""
+      CONTACT_RATE_LIMIT: "5"
+      CONTACT_RATE_WINDOW_SECONDS: "3600"
+    volumes:
+      # Contact submissions must outlive the container.
+      - contact-data:/app/data
+    expose:
+      - "8000"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+
+volumes:
+  contact-data:

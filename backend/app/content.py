@@ -1,0 +1,538 @@
+"""Every word on the site lives here.
+
+Edit this file to change the portfolio. No rebuild of the frontend is required - the React
+app fetches this content at runtime from ``/api/site``.
+
+Sourced from Vihaan's resume (Vihaan_Rajagopal_Resume_2026.docx) plus the project
+repositories on this machine. Items still marked ``# [CONFIRM]`` were inferred rather than
+stated and should be checked.
+
+Attribution note: the smart-space research projects below are collaborative. Each carries a
+``context`` naming the team and a ``contribution`` list stating exactly what Vihaan did, so a
+reader is never left to infer sole authorship.
+"""
+
+from .models import (
+    EducationItem,
+    ExperienceItem,
+    Profile,
+    Project,
+    QuickFact,
+    SiteContent,
+    SkillGroup,
+    SocialLink,
+    WritingItem,
+)
+
+# --------------------------------------------------------------------------------------
+# Profile
+# --------------------------------------------------------------------------------------
+
+PROFILE = Profile(
+    name="Vihaan Rajagopal",
+    initials="VR",
+    role="Student Researcher & Developer",
+    tagline="I build systems for smart spaces that are secure and private by design.",
+    hero_line=(
+        "I am a high school researcher working on smart-street and smart-room systems — "
+        "the kind that can answer useful questions about a space without giving away who "
+        "was in it."
+    ),
+    bio_short=(
+        "I work on smart-space research at Rutgers with the NSF Center for Smart "
+        "Streetscapes, compete in cybersecurity and robotics, and build the software that "
+        "turns research systems into something people can actually use."
+    ),
+    bio_long=[
+        "A room or a street full of sensors can answer a remarkable number of useful "
+        "questions. The catch is that the easy way to answer them — collect everything, hand "
+        "it to a model, and hope — gives away identities and raw footage in exchange for "
+        "convenience. The research I contribute to is about the harder version: deciding what "
+        "a system is allowed to know before it is allowed to answer.",
+        "I work on that with a team at Rutgers University, part of the NSF Center for Smart "
+        "Streetscapes, led by Prof. Jorge Ortiz and with PhD mentors Taqiya Ehsan and Shuren "
+        "Xia. My own contribution has been mostly on TeLLMe, the query system: I built the "
+        "frontend and the integration layer that binds a live instrumented room and the CARLA "
+        "simulator to the query pipeline, and got those pieces working together end to end. "
+        "Being the person who connects the parts turns out to be a good way to learn how all "
+        "of them work.",
+        "Outside the lab I spend a lot of time in cybersecurity labs — reverse engineering, "
+        "Linux internals, memory and binary analysis — because understanding how systems fail "
+        "is the fastest way to learn to build ones that do not. I also write the control "
+        "software for my school's competition robot, contribute product and engineering work "
+        "to a sports platform used by hundreds of athletes and coaches, and have played Indian "
+        "classical violin for eight years, which is better training in pattern recognition and "
+        "real-time adaptation than anything else I do.",
+    ],
+    location="Edison, New Jersey, United States",
+    email="vihaanraj155@gmail.com",
+    availability="Open to research and engineering opportunities",
+    socials=[
+        SocialLink(label="GitHub", url="https://github.com/vihaanraj155-commits", icon="github"),
+        SocialLink(label="Email", url="mailto:vihaanraj155@gmail.com", icon="email"),
+    ],
+    quick_facts=[
+        QuickFact(label="Focus", value="Smart spaces, security, applied AI"),
+        QuickFact(label="Working in", value="Python, TypeScript, Java"),
+        QuickFact(label="Based in", value="Edison, NJ"),
+    ],
+)
+
+# --------------------------------------------------------------------------------------
+# Projects
+# --------------------------------------------------------------------------------------
+
+RESEARCH_CONTEXT = (
+    "Collaborative research at Rutgers University with the NSF Center for Smart Streetscapes, "
+    "led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and Shuren Xia alongside other "
+    "graduate and undergraduate researchers."
+)
+
+PROJECTS: list[Project] = [
+    Project(
+        slug="tellme-interface",
+        title="TeLLMe Interface & Integration",
+        subtitle="Privacy-preserving smart-space query",
+        year="2025 — 2026",
+        role="Frontend architecture & systems integration",
+        featured=True,
+        accent="violet",
+        context=RESEARCH_CONTEXT,
+        summary=(
+            "The conversational interface for a privacy-bounded smart-space query system, plus "
+            "the integration layer connecting live smart-room sensors and the CARLA simulator "
+            "to the query pipeline."
+        ),
+        contribution=[
+            "Built the entire frontend: the conversational workspace, the staged progress view "
+            "that surfaces decomposition, verification, and synthesis as they happen, and the "
+            "result views for answers, sensor attribution, and evidence.",
+            "Designed and implemented the API integration layer binding the smart-room sensor "
+            "stack and the CARLA simulator to the TeLLMe query backend, normalizing both "
+            "context sources into the single timestamped format the pipeline consumes.",
+            "Implemented the server-side proxy routes that keep the runner address and raw "
+            "payloads off the client, giving the system one place to validate and "
+            "privacy-filter every response.",
+            "Brought the end-to-end path online — sensor context through routing and "
+            "verification to a rendered answer — and got the components working together as a "
+            "single running system.",
+        ],
+        highlights=[
+            "Staged progress UI shows each phase of a multi-stage agentic query as it "
+            "completes, rather than hiding the work behind a spinner.",
+            "A single server-side choke point validates and filters every response, so raw "
+            "captures, identities, and internal paths never reach the browser.",
+            "Answers carry sensor attribution and verification status, so a reader can see "
+            "what a claim rests on.",
+            "Accepts context from both a physical instrumented room and the CARLA simulator "
+            "through one normalized interface.",
+            "Falls back to a deterministic mode when no model API is configured.",
+        ],
+        body=[
+            "TeLLMe answers natural-language questions about an instrumented space without "
+            "handing over the footage or the identities behind the answer. It is a team "
+            "project; my work on it was the interface and the plumbing — everything between "
+            "the sensors and the person asking the question.",
+            "The integration side was the harder half. Context arrives from two very different "
+            "places: a real smart room full of sensors, and CARLA, the driving simulator used "
+            "to model street scenes. The query pipeline needs one consistent shape regardless "
+            "of origin, so I built the API layer that binds both to the backend and normalizes "
+            "them into the same timestamped context format, then wired the full path through "
+            "routing and verification out to a rendered answer.",
+            "On the interface side, the browser never talks to the query runner directly. It "
+            "calls same-origin routes, and the server contacts the runner — which keeps the "
+            "backend address server-side and creates exactly one place where responses get "
+            "validated and filtered before anyone can see them. Multi-stage agentic work is "
+            "also slow enough that a spinner is a bad answer, so the UI shows each stage "
+            "landing, and every answer arrives with its verification status and the sensors it "
+            "drew on attached.",
+        ],
+        stack=["Next.js", "React", "TypeScript", "Tailwind CSS", "Python", "CARLA"],
+        links=[],
+    ),
+    Project(
+        slug="tellme-harness",
+        title="TeLLMe Harness",
+        subtitle="Deterministic privacy routing",
+        year="2025 — 2026",
+        role="Research contributor",
+        featured=False,
+        accent="teal",
+        context=RESEARCH_CONTEXT,
+        summary=(
+            "The query layer behind TeLLMe, which decides deterministically — before any model "
+            "is involved — whether a question can be answered without exposing raw captures or "
+            "identities."
+        ),
+        contribution=[
+            "Connected the harness to live context sources, so it ran against real smart-room "
+            "and CARLA data rather than fixtures.",
+            "Worked on the request and response contract the harness exposes, which is the "
+            "boundary the interface depends on.",
+            "Tested the end-to-end path and helped resolve integration failures between the "
+            "routing layer and the components on either side of it.",
+        ],
+        highlights=[
+            "Deterministic privacy-bounded routing runs first and can refuse a query outright, "
+            "with no model in the loop.",
+            "Allowed queries become constrained, dry-run execution plans instead of open-ended "
+            "prompts.",
+            "Fuses timestamped context from video, audio, radar, and Wi-Fi into occupancy, "
+            "motion, and room-state JSON with confidence scores and evidence references.",
+            "Separate context and answer validators bound what a model may see and what it is "
+            "permitted to say.",
+            "Every run is logged locally so any answer can be audited after the fact.",
+        ],
+        body=[
+            "The shortest path to answering questions about a room is to pipe everything the "
+            "sensors saw into a model and trust the prompt to behave. That trade — identities "
+            "and raw captures for convenience — is the one this harness exists to avoid. It is "
+            "team research; my part was integration rather than the routing design itself.",
+            "The first stage is deterministic and has no model in it at all. A router reads the "
+            "query, applies an explicit policy, and if the question cannot be answered inside "
+            "its bounds it is refused right there. Queries that make it through are compiled "
+            "into constrained execution plans, and the context they run against is already "
+            "filtered: occupancy, motion, audio events, room state, each with a confidence "
+            "value and a pointer to the evidence rather than the evidence itself.",
+            "Validators sit on both sides of the model — one bounds what goes in, the other "
+            "checks what comes out. Everything is logged, because a privacy guarantee nobody "
+            "can audit is just a claim.",
+        ],
+        stack=["Python", "Pydantic", "Streamlit", "LLM tool-calling", "pytest"],
+        links=[],
+    ),
+    Project(
+        slug="cityos-agentic-stack-planner",
+        title="CityOS Agentic Stack Planner",
+        subtitle="Verified multi-agent coordination",
+        year="2025 — 2026",
+        role="Research contributor",
+        featured=False,
+        accent="blue",
+        context=RESEARCH_CONTEXT,
+        summary=(
+            "A planner that turns a natural-language request into a multi-agent protocol, "
+            "model-checks it with TLA+ before anything runs, and synthesizes deployable "
+            "applications from the verified plan."
+        ),
+        contribution=[
+            "Contributed across the project, primarily through the TeLLMe layer that feeds "
+            "requirements into the planner.",
+            "Helped connect the planning pipeline to the interface and context sources so the "
+            "stack could be exercised end to end.",
+            "Assisted with testing and integration as the pieces came together.",
+        ],
+        highlights=[
+            "Decomposes user intent into structured application requirements, then generates "
+            "an explicit agent / resource / channel intermediate representation.",
+            "Compiles that IR to PlusCal and checks it with the TLC model checker for deadlock "
+            "freedom, mutual exclusion, and hand-written safety invariants.",
+            "Runs an automated repair loop — up to five attempts — that reads the TLC "
+            "counterexample and revises the protocol rather than failing the run.",
+            "Exports a verified module plan and synthesizes one application per agent plus a "
+            "dedicated monitor app.",
+            "Ships a benchmark harness for comparing verified and unverified agent stacks on "
+            "the same task set.",
+        ],
+        body=[
+            "A group of agents working on the same task is really just a concurrent program, "
+            "and we already know how to reason about concurrent programs. We mostly stop doing "
+            "it when the processes happen to be language models. This is a team attempt to "
+            "keep doing it; I contributed mainly from the TeLLMe side.",
+            "A request enters as plain language and is broken into structured requirements. "
+            "From those, the planner builds an intermediate representation naming every agent, "
+            "the resources they compete for, and the channels they talk over. That "
+            "representation is the part worth verifying, so it is translated into PlusCal and "
+            "handed to TLC, which explores the state space looking for deadlock, "
+            "mutual-exclusion violations, and broken invariants.",
+            "When TLC finds a counterexample the run does not simply fail. The trace feeds back "
+            "into a repair loop that revises the protocol and checks again, up to five times. "
+            "Whatever survives becomes a verified module plan, which a synthesizer turns into "
+            "one deployable app per agent plus a monitor. The planner never runs the agents "
+            "itself — keeping that line sharp is what makes the guarantee mean anything.",
+        ],
+        stack=["Python", "TLA+ / PlusCal", "TLC", "Pydantic", "FastAPI", "pytest"],
+        links=[],
+    ),
+    Project(
+        slug="parallax-vex-pushback",
+        title="VEX Push Back Robot",
+        subtitle="Competition robot control system",
+        year="2025 — 2026",
+        role="Programming & systems",
+        featured=False,
+        accent="amber",
+        context="Built with a 5-10 member school engineering team.",
+        summary=(
+            "Driver and autonomous control software for the team's VEX V5 robot, which placed "
+            "16th out of 100+ teams at the regional competition."
+        ),
+        contribution=[
+            "Wrote the driver control and autonomous routines for the V5 platform.",
+            "Tuned the autonomous algorithm iteratively, cutting task completion time by "
+            "roughly 30%.",
+            "Optimized drivetrain control and stopping behavior for movement precision and "
+            "match-to-match consistency.",
+        ],
+        highlights=[
+            "Improved autonomous routine efficiency by roughly 30% in task completion time "
+            "through algorithm tuning and iterative testing.",
+            "Arcade drive mixing throttle and steering on one stick, which proved easier to "
+            "drive accurately under match pressure than tank.",
+            "Brake-mode drivetrain for repeatable positioning, with hold-mode intake and "
+            "conveyor so scored elements stay seated when the motors idle.",
+            "Centralized port and hardware map, so a wiring change touches exactly one file.",
+        ],
+        body=[
+            "Competition robotics teaches one lesson very efficiently: the elegant solution and "
+            "the one that survives a match are not always the same, and the gap between them "
+            "is usually driver ergonomics.",
+            "The control stack is deliberately plain. Arcade drive mixes throttle and steering "
+            "into left and right motor power, which turned out to be meaningfully easier to "
+            "drive accurately than tank when the clock is running. The drivetrain brakes "
+            "instead of coasting so positions repeat, and the intake and conveyor hold instead "
+            "of releasing so nothing slips when the operator lets go.",
+            "The autonomous side was where the real gains were. Tuning the routine and testing "
+            "it iteratively cut task completion time by about 30%, which is the difference "
+            "between finishing a scoring cycle inside the autonomous period and not. All port "
+            "assignments live in one module separate from behavior — hardware changes between "
+            "competitions are constant, and confining them to a single file is the difference "
+            "between a five-minute fix and a debugging session in the pit.",
+        ],
+        stack=["Python", "VEX V5", "VEXcode"],
+        links=[],
+    ),
+]
+
+# --------------------------------------------------------------------------------------
+# Experience
+# --------------------------------------------------------------------------------------
+
+EXPERIENCE: list[ExperienceItem] = [
+    ExperienceItem(
+        org="Rutgers University — NSF Center for Smart Streetscapes (CS3)",
+        role="Student Researcher",
+        period="2025 — Present",  # [CONFIRM] start date
+        location="New Brunswick, NJ",  # [CONFIRM]
+        summary=(
+            "Research on privacy-bounded smart-space query systems with Prof. Jorge Ortiz, "
+            "PhD mentors Taqiya Ehsan and Shuren Xia, and a team of graduate and undergraduate "
+            "researchers."
+        ),
+        bullets=[
+            "Built the frontend for TeLLMe, a system that answers natural-language questions "
+            "about an instrumented space without exposing raw captures or identities.",
+            "Designed and implemented the API integration layer connecting a live smart room "
+            "and the CARLA simulator to the query pipeline, normalizing both into one "
+            "timestamped context format.",
+            "Brought the end-to-end path online — sensor context through routing and "
+            "verification to a rendered answer — and got the components running as one system.",
+            "Contributed to the wider CityOS agentic planning work, primarily through the "
+            "TeLLMe layer that feeds it.",
+        ],
+        tags=["Smart Spaces", "Privacy", "Systems Integration", "React", "Python"],
+    ),
+    ExperienceItem(
+        org="Waresport",
+        role="Product & Growth Contributor",
+        period="December 2025 — Present",
+        location=None,
+        summary=(
+            "Product and engineering work on an all-in-one sports management platform used by "
+            "500+ athletes, coaches, and administrators."
+        ),
+        bullets=[
+            "Led product iteration cycles by identifying user pain points in scheduling, "
+            "payments, and communication workflows, improving usability and feature adoption.",
+            "Designed and refined core features — event scheduling, registration flows, "
+            "communication tools — reducing administrative friction by roughly 60%.",
+            "Drove user growth and onboarding across multiple teams and clubs, contributing to "
+            "platform expansion and retention.",
+            "Worked closely with engineering to translate user needs into scalable features "
+            "and system requirements.",
+        ],
+        tags=["Product", "Growth", "Systems Design"],
+    ),
+    ExperienceItem(
+        org="VEX Robotics Competition",
+        role="Engineering, Programming & Systems Optimization",
+        period="August 2025 — Present",
+        location=None,
+        summary=(
+            "Robot software and systems work for the team's V5 platform across the Push Back "
+            "season."
+        ),
+        bullets=[
+            "Placed 16th out of 100+ teams at the regional competition.",
+            "Improved autonomous routine efficiency by roughly 30% in task completion time "
+            "through algorithm tuning and iterative testing.",
+            "Optimized drivetrain control and mechanical performance for better movement "
+            "precision and consistency during matches.",
+            "Collaborated across a 5–10 member engineering team, integrating software, "
+            "hardware, and control systems.",
+        ],
+        tags=["Robotics", "Controls", "Python"],
+    ),
+    ExperienceItem(
+        org="Lockheed Martin CyberQuest",
+        role="Competitor — Cybersecurity & Reverse Engineering",
+        period="March 2026",
+        location=None,
+        summary=(
+            "State-level cybersecurity competition covering reverse engineering, Linux "
+            "systems, and network analysis."
+        ),
+        bullets=[
+            "Ranked 5th in the state, in the top ~25% of competing teams.",
+            "Solved 10+ challenges spanning reverse engineering, Linux internals, and network "
+            "analysis.",
+            "Applied binary analysis, debugging, and exploitation techniques under "
+            "time-constrained conditions.",
+        ],
+        tags=["Cybersecurity", "Reverse Engineering", "Linux"],
+    ),
+    ExperienceItem(
+        org="Blue Ocean Entrepreneurship Competition",
+        role="Software Developer — Backend",
+        period="2026",
+        location=None,
+        summary=(
+            "Backend engineering for a smart faucet attachment aimed at reducing micro-leaks "
+            "and improving household water efficiency."
+        ),
+        bullets=[
+            "Selected in the top 1,000 worldwide out of 5,000+ submissions.",
+            "Built the backend logic for leak detection and real-time monitoring.",
+            "Designed the data flow and system logic supporting continuous sensor readings.",
+        ],
+        tags=["Backend", "IoT", "Sustainability"],
+    ),
+    ExperienceItem(
+        org="School Newspaper",
+        role="Technical Writer & Editor",
+        period="2024 — Present",
+        location=None,
+        summary=(
+            "Technical writing on engineering, computing, and emerging technology for a "
+            "student readership of 1,000+."
+        ),
+        bullets=[
+            "Authored 10+ technical articles on engineering, computing, and emerging tech.",
+            "Translated complex topics such as AI and cybersecurity into accessible "
+            "explanations for a general student audience.",
+            "Onboarded and mentored 50+ new student writers into the editorial workflow.",
+        ],
+        tags=["Technical Writing", "STEM Communication"],
+    ),
+    ExperienceItem(
+        org="Indian Classical Violin",
+        role="Performer & Student Teacher",
+        period="2018 — Present",
+        location=None,
+        summary=(
+            "Eight-plus years of training in Indian classical violin, performing publicly and "
+            "teaching students one-on-one."
+        ),
+        bullets=[
+            "Accompanied vocalists at paid performances across the tri-state area, adapting in "
+            "real time to live musical direction.",
+            "Taught 5–10 students through structured one-on-one lessons, building technical "
+            "proficiency and music theory foundations.",
+            "Designed individualized lesson plans and practice strategies with measurable "
+            "student progress.",
+        ],
+        tags=["Performance", "Teaching", "Mentorship"],
+    ),
+]
+
+# --------------------------------------------------------------------------------------
+# Education
+# --------------------------------------------------------------------------------------
+
+EDUCATION: list[EducationItem] = [
+    EducationItem(
+        school="Edison High School",
+        credential="High School Diploma",
+        period="Expected 2028",
+        location="Edison, NJ",
+        facts=[
+            QuickFact(label="Unweighted GPA", value="4.20"),
+            QuickFact(label="Weighted GPA", value="5.93"),
+            QuickFact(label="SAT", value="1540 superscore"),
+        ],
+        coursework=[
+            "AP Biology",
+            "AP Chemistry",
+            "AP US History",
+            "AP Psychology",
+        ],
+    ),
+]
+
+# --------------------------------------------------------------------------------------
+# Capabilities
+# --------------------------------------------------------------------------------------
+
+SKILLS: list[SkillGroup] = [
+    SkillGroup(
+        title="Languages & Core",
+        caption="What I write in day to day",
+        items=["Python", "TypeScript", "Java", "Linux", "HTML & CSS", "Bash"],
+    ),
+    SkillGroup(
+        title="Building & Integration",
+        caption="Connecting systems that were not built to talk",
+        items=[
+            "React & Next.js",
+            "REST API design & integration",
+            "Sensor and simulator data pipelines",
+            "End-to-end system bring-up",
+            "Debugging across service boundaries",
+        ],
+    ),
+    SkillGroup(
+        title="Security",
+        caption="Learning how systems fail",
+        items=[
+            "Penetration testing concepts",
+            "Reverse engineering & binary analysis",
+            "Linux internals & system hardening",
+            "Network analysis",
+            "25+ labs on Hack The Box and TryHackMe",
+        ],
+    ),
+    SkillGroup(
+        title="Cloud & AI",
+        caption="Where most of my study time goes",
+        items=[
+            "AWS (certifications in progress)",
+            "Cloud architecture & distributed systems",
+            "LLM integration & tool-calling",
+            "Structured output & schema validation",
+            "Applied AI inside real products",
+        ],
+    ),
+]
+
+# --------------------------------------------------------------------------------------
+# Writing - intentionally empty. The section hides itself until this list has entries.
+# --------------------------------------------------------------------------------------
+
+WRITING: list[WritingItem] = []
+
+
+def get_site_content() -> SiteContent:
+    """Assemble the full payload served by ``GET /api/site``."""
+    return SiteContent(
+        profile=PROFILE,
+        projects=PROJECTS,
+        experience=EXPERIENCE,
+        education=EDUCATION,
+        skills=SKILLS,
+        writing=WRITING,
+    )
+
+
+def get_project(slug: str) -> Project | None:
+    """Look up a single project by slug, or ``None`` if it does not exist."""
+    return next((project for project in PROJECTS if project.slug == slug), None)
