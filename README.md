@@ -14,11 +14,11 @@ of the way. Light and dark themes are both first-class.
 Details are taken from `Vihaan_Rajagopal_Resume_2026.docx` and from Vihaan directly. What
 remains:
 
-- [ ] **Collaborator names** — the research projects publicly credit Prof. Jorge Ortiz and
-      PhD mentors Taqiya Ehsan and Shuren Xia. Confirm they are happy to be named on a public
-      site before it goes live.
-- [ ] **Portrait** — intentionally blank; the About section shows a "VR" monogram. Add
-      `frontend/public/portrait.jpg` when a photo exists.
+- [x] **Collaborator names** — the research projects publicly credit Prof. Jorge Ortiz and
+      PhD mentor Taqiya Ehsan; other mentors and researchers are referred to collectively.
+      Consent to be named on a public site confirmed by Vihaan on 2026-08-18.
+- [x] **Portrait** — `frontend/public/portrait.jpg` is in place; the "VR" monogram now only
+      shows if the image fails to load.
 - [ ] **Domain** — `vihaanrajagopal.com` is still assumed in `index.html`, `robots.txt`,
       and `sitemap.xml`
 

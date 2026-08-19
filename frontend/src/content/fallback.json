@@ -8,7 +8,7 @@
     "bio_short": "I work on smart-space research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, compete in cybersecurity and robotics, and build the software that turns research systems into something people can actually use.",
     "bio_long": [
       "A room or a street full of sensors can answer a remarkable number of useful questions. The catch is that the easy way to answer them — collect everything, hand it to a model, and hope — gives away identities and raw footage in exchange for convenience. The research I contribute to is about the harder version: deciding what a system is allowed to know before it is allowed to answer.",
-      "I work on that with a team at Rutgers WINLAB, part of the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz and with PhD mentors Taqiya Ehsan and Shuren Xia. My own contribution has been mostly on TeLLMe, the query system: I built the frontend and the integration layer that binds a live instrumented room and the CARLA simulator to the query pipeline, and got those pieces working together end to end. Being the person who connects the parts turns out to be a good way to learn how all of them work.",
+      "I work on that with a team at Rutgers WINLAB, part of the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz and with PhD mentors including Taqiya Ehsan. My own contribution has been mostly on TeLLMe, the query system: I built the frontend and the integration layer that binds a live instrumented room and the CARLA simulator to the query pipeline, and got those pieces working together end to end. Being the person who connects the parts turns out to be a good way to learn how all of them work.",
       "Outside the lab I spend a lot of time in cybersecurity labs — reverse engineering, Linux internals, memory and binary analysis — because understanding how systems fail is the fastest way to learn to build ones that do not. I also write the control software for my school's competition robot, contribute product and engineering work to a sports platform used by hundreds of athletes and coaches, and have played Indian classical violin for eight years, which is better training in pattern recognition and real-time adaptation than anything else I do."
     ],
     "location": "Edison, New Jersey, United States",
@@ -49,7 +49,7 @@
       "year": "2026",
       "role": "Frontend architecture & systems integration",
       "summary": "The conversational interface for a privacy-bounded smart-space query system, plus the integration layer connecting live smart-room sensors and the CARLA simulator to the query pipeline.",
-      "context": "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and Shuren Xia alongside other graduate and undergraduate researchers.",
+      "context": "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors including Taqiya Ehsan alongside other graduate and undergraduate researchers.",
       "contribution": [
         "Built the entire frontend: the conversational workspace, the staged progress view that surfaces decomposition, verification, and synthesis as they happen, and the result views for answers, sensor attribution, and evidence.",
         "Designed and implemented the API integration layer binding the smart-room sensor stack and the CARLA simulator to the TeLLMe query backend, normalizing both context sources into the single timestamped format the pipeline consumes.",
@@ -87,7 +87,7 @@
       "year": "2026",
       "role": "Research contributor",
       "summary": "The query layer behind TeLLMe, which decides deterministically — before any model is involved — whether a question can be answered without exposing raw captures or identities.",
-      "context": "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and Shuren Xia alongside other graduate and undergraduate researchers.",
+      "context": "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors including Taqiya Ehsan alongside other graduate and undergraduate researchers.",
       "contribution": [
         "Connected the harness to live context sources, so it ran against real smart-room and CARLA data rather than fixtures.",
         "Worked on the request and response contract the harness exposes, which is the boundary the interface depends on.",
@@ -123,7 +123,7 @@
       "year": "2026",
       "role": "Research contributor",
       "summary": "A planner that turns a natural-language request into a multi-agent protocol, model-checks it with TLA+ before anything runs, and synthesizes deployable applications from the verified plan.",
-      "context": "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and Shuren Xia alongside other graduate and undergraduate researchers.",
+      "context": "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors including Taqiya Ehsan alongside other graduate and undergraduate researchers.",
       "contribution": [
         "Contributed across the project, primarily through the TeLLMe layer that feeds requirements into the planner.",
         "Helped connect the planning pipeline to the interface and context sources so the stack could be exercised end to end.",
@@ -193,7 +193,7 @@
       "role": "Student Researcher",
       "period": "2026 — Present",
       "location": "WINLAB, Rutgers University",
-      "summary": "Research on privacy-bounded smart-space query systems with Prof. Jorge Ortiz, PhD mentors Taqiya Ehsan and Shuren Xia, and a team of graduate and undergraduate researchers.",
+      "summary": "Research on privacy-bounded smart-space query systems with Prof. Jorge Ortiz, PhD mentors including Taqiya Ehsan, and a team of graduate and undergraduate researchers.",
       "bullets": [
         "Built the frontend for TeLLMe, a system that answers natural-language questions about an instrumented space without exposing raw captures or identities.",
         "Designed and implemented the API integration layer connecting a live smart room and the CARLA simulator to the query pipeline, normalizing both into one timestamped context format.",
