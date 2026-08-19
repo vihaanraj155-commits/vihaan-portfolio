@@ -32,6 +32,11 @@ class Settings(BaseSettings):
     static_dir: Path = BASE_DIR / "static"
     resume_filename: str = "resume.pdf"
 
+    # Built React bundle, served by the API so the site ships as a single container. The
+    # default deliberately does not exist in a source checkout, so backend-only development
+    # and the test suite serve the API alone. The Docker image copies the build here.
+    frontend_dist: Path = BASE_DIR / "frontend_dist"
+
     # Optional SMTP relay. When smtp_host is empty, submissions are stored only.
     smtp_host: str = ""
     smtp_port: int = 587

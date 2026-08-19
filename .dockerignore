@@ -1,0 +1,33 @@
+# Build context hygiene for the root Dockerfile. Anything the image builds for itself, or that
+# is machine-local, stays out -- it would slow the upload and can poison the build.
+.git
+.gitignore
+.github
+.claude
+
+# Rebuilt inside the image
+**/node_modules
+**/dist
+**/.vite
+
+# Stale incremental type-check state makes `tsc -b` skip files it should re-check.
+**/*.tsbuildinfo
+
+# Python local state
+**/.venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.ruff_cache
+**/*.egg-info
+
+# Local runtime data and secrets; the deployed app uses a Fly volume and Fly secrets.
+backend/data
+**/.env
+**/.env.local
+
+# Not needed at runtime
+README.md
+CLAUDE.md
+docker-compose.yml
+backend/tests

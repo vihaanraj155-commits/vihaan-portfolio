@@ -1,0 +1,86 @@
+name: CI / Deploy
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Supersede in-flight checks for the same ref; the deploy job opts out of cancellation.
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (ruff + pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      # 3.12 to match the runtime image rather than the 3.14 local venv.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      # Install the pinned runtime set, not the floating pyproject one, so CI exercises the
+      # same versions the image ships.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio httpx ruff
+
+      - name: Lint
+        run: ruff check .
+
+      # tests/ has an __init__.py, so pytest puts backend/ on sys.path and `app` imports
+      # without the package needing to be installed.
+      - name: Test
+        run: pytest
+
+  frontend:
+    name: Frontend (typecheck + build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # npm ci rather than npm install: it fails loudly on lockfile drift, which is exactly
+      # what the Docker build would hit later.
+      - run: npm ci
+
+      # `npm run build` is `tsc -b && vite build`, so this is the type-check gate too.
+      - run: npm run build
+
+  deploy:
+    name: Deploy to Fly.io
+    needs: [backend, frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    concurrency:
+      # One machine and one volume, so overlapping releases would fight. Never cancel a
+      # half-finished deploy.
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

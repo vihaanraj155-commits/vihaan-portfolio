@@ -67,16 +67,59 @@ without Prof. Ortiz's permission. This repo only *describes* the research, which
 
 ## Privacy
 
-`backend/static/resume.pdf` is the real résumé and contains a **phone number**. The GitHub repo
-is **private** partly for this reason. Before making the repo public, remove the phone number
-from the résumé — git history is permanent.
+`backend/static/resume.pdf` is served publicly at `/api/resume` by the deployed site, so it is
+the **phone-free** version: it was regenerated from `Vihaan_Rajagopal_Resume_2026.docx` with the
+`| (m) <number>` fragment removed from the header line. Keep it that way — anything added to that
+PDF is world-readable the moment it deploys.
+
+The **earlier** résumé, which did contain the phone number, is still in git history. That is
+harmless while the repo is private, but the history must be rewritten before the repo is ever
+made public.
+
+## Deployment
+
+The site is one container on Fly.io: the root `Dockerfile` builds the React bundle in a Node
+stage and hands it to FastAPI, which serves the SPA and the API from a single origin on port
+8000. `backend/app/spa.py` is what nginx used to do — immutable caching for `/assets`, `no-store`
+for `index.html`, and a history-API fallback.
+
+`docker-compose.yml` and the two per-service Dockerfiles are unchanged and still run the local
+nginx-fronted stack; they are not what deploys.
+
+Pushing to `master` runs `.github/workflows/ci.yml`, which gates on ruff + pytest + `npm run
+build` and then deploys to Fly. Runtime secrets (SMTP) live in `fly secrets`, never in the repo
+or in GitHub.
+
+Two constraints that must not be broken:
+
+- **One machine only.** `services/rate_limit.py` keeps its window in process memory and the
+  data volume attaches to a single machine. Never `fly scale count 2`, never add `--workers`.
+- **The catch-all route must stay last.** `mount_frontend()` is called after every
+  `include_router`; reversing that order makes the SPA swallow the entire API.
+
+After editing `backend/app/content.py`, run `npm run sync:content` from `frontend/` with the
+backend up. `test_bundled_fallback_matches_api_content` fails the build if you forget.
 
 ## Checks before saying done
 
 ```powershell
-cd backend;  .\.venv\Scripts\python.exe -m pytest -q    # 19 tests
-cd frontend; npm run build                              # type-check + build
+cd backend;  .\.venv\Scripts\python.exe -m ruff check .  # lint gate, also runs in CI
+cd backend;  .\.venv\Scripts\python.exe -m pytest -q     # 20 tests
+cd frontend; npm run build                               # type-check + build
 ```
+
+To exercise the deployed single-origin shape locally, without Docker:
+
+```powershell
+cd frontend; npm run build
+cd ..\backend
+$env:FRONTEND_DIST = "..\frontend\dist"; $env:ENVIRONMENT = "production"
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --port 8010
+```
+
+Then confirm `/` and `/projects/<slug>` return the shell, `/assets/<hashed>.js` is immutable,
+and a missing asset or an unknown `/api/*` path 404s **as JSON rather than HTML** — that last
+one is the failure mode the catch-all route exists to avoid.
 
 Accessibility is a maintained property, not a one-off: every text/background pair clears WCAG
 AA in both themes, and reduced motion is honoured in `use-reveal.ts` (final-state content, no

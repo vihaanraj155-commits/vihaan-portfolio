@@ -48,8 +48,12 @@ def submit_contact(
     if payload.website.strip():
         return ContactResponse(message="Thanks — your message has been received.")
 
+    # Fly sets Fly-Client-IP itself and overwrites any client-supplied value, whereas it only
+    # *appends* to X-Forwarded-For -- so the first XFF hop is attacker-controlled and could be
+    # rotated to walk straight past the limit. Prefer Fly's header, fall back to XFF for the
+    # nginx/docker-compose stack.
     key = client_key(
-        request.headers.get("x-forwarded-for"),
+        request.headers.get("fly-client-ip") or request.headers.get("x-forwarded-for"),
         request.client.host if request.client else None,
     )
     allowed, retry_after = get_limiter(settings).check(key)
