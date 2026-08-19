@@ -126,7 +126,55 @@ image** — see below.
 
 ---
 
-## Deployment
+## Deployment — static hosting (current plan)
+
+The site is deployed as a **static bundle** to Cloudflare Pages or Netlify: free, no card, and
+it publishes from a private repo, which matters because this one stays private (see *Privacy*).
+
+This works because the frontend already ships a full content snapshot. `api.ts` falls back to
+`src/content/fallback.json` whenever `/api/site` is unreachable, so with no backend at all the
+site renders every section, all four projects, and every detail route.
+
+```powershell
+cd frontend
+npm run build:static      # tsc -b && vite build --mode static -> dist/
+```
+
+Host settings: build command `npm run build:static`, output directory `frontend/dist`.
+
+### What `--mode static` changes
+
+It loads `frontend/.env.static`, which sets `VITE_CONTACT_ENDPOINT=off`. That one variable
+swaps the contact form for a mail-link panel, because a form posting to an endpoint that does
+not exist is worse than an honest email address. To keep a working form, point that variable at
+a third-party form service instead:
+
+```
+VITE_CONTACT_ENDPOINT=https://formspree.io/f/your-id
+```
+
+Anything that is not `off` is used as the POST target verbatim, absolute URLs included.
+
+`npm run build` (no mode) is unchanged and still expects the backend — that is what the Docker
+and Fly paths below use.
+
+### Two things the static build depends on
+
+- **`frontend/public/_redirects`** — `/* /index.html 200`, understood by both Netlify and
+  Cloudflare Pages. React Router owns `/projects/:slug` client-side, so without this every deep
+  link 404s. `vite preview` does not apply it; only the host does.
+- **`frontend/public/resume.pdf`** — a copy of `backend/static/resume.pdf`, since `resumeUrl`
+  cannot go through `/api/resume` with no API. `test_public_resume_matches_backend_copy` fails
+  the build if the two drift, so updating the résumé means copying it to both.
+
+### Still to do before the URL is shared
+
+The hostname in `frontend/index.html`, `robots.txt` and `sitemap.xml` still says
+`vihaan-portfolio.fly.dev`. Replace it with the real one once the host assigns it.
+
+---
+
+## Deployment — Fly.io (alternative, ~$3-4/month)
 
 The deployed site is a **single container**: the root `Dockerfile` builds the React bundle in a
 Node stage, then FastAPI serves both that bundle and the API from one origin on port 8000

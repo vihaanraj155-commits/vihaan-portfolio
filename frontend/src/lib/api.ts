@@ -27,7 +27,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${API_BASE}${path}`, {
+    // An absolute URL (a third-party form service) is used as given; only in-app paths
+    // are resolved against API_BASE.
+    const url = /^https?:\/\//.test(path) ? path : `${API_BASE}${path}`;
+
+    const response = await fetch(url, {
       ...init,
       signal: controller.signal,
       headers: { "Content-Type": "application/json", ...init?.headers },
@@ -89,11 +93,32 @@ export async function fetchSite(): Promise<SiteResult> {
   }
 }
 
+/**
+ * Where the contact form posts. Defaults to this app's own backend.
+ *
+ * On a static host there is no backend to post to, so `VITE_CONTACT_ENDPOINT=off` (see
+ * `.env.static`) tells the UI to offer an email address instead of a form that could only
+ * ever fail. Any other value is used verbatim, which is how a third-party form service is
+ * wired in without touching this file.
+ */
+const CONTACT_ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT ?? "/api/contact";
+
+export const contactFormEnabled = CONTACT_ENDPOINT !== "off";
+
 export async function sendContact(payload: ContactPayload): Promise<{ ok: boolean; message: string }> {
-  return request("/api/contact", {
+  if (!contactFormEnabled) {
+    throw new Error("No contact endpoint is configured for this build.");
+  }
+
+  return request(CONTACT_ENDPOINT, {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
-export const resumeUrl = `${API_BASE}/api/resume`;
+/**
+ * Served as a static asset rather than through `/api/resume`, so the download works on a
+ * static host as well as behind the backend. `backend/static/resume.pdf` remains the source
+ * of truth; `test_resume_public_copy_matches` fails the build if the two ever drift.
+ */
+export const resumeUrl = "/resume.pdf";

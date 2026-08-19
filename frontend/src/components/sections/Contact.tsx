@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, CheckCircle2, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Mail, Send } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { SocialIcons } from "@/components/layout/SocialIcons";
-import { Button, Reveal, Section, SectionHeading } from "@/components/ui/primitives";
-import { ApiError, sendContact } from "@/lib/api";
+import { Button, LinkButton, Reveal, Section, SectionHeading } from "@/components/ui/primitives";
+import { ApiError, contactFormEnabled, sendContact } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import type { Profile } from "@/lib/types";
 
@@ -45,6 +45,31 @@ function FieldError({ message }: { message?: string }) {
       <AlertCircle size={13} aria-hidden />
       {message}
     </p>
+  );
+}
+
+/**
+ * Shown instead of the form on a static build. A form that posts nowhere is worse than an
+ * honest mail link, so the CTA changes rather than the form silently failing on submit.
+ */
+function EmailPanel({ profile }: { profile: Profile }) {
+  return (
+    <div className="rounded-3xl border border-hairline bg-surface p-7 md:p-9">
+      <Mail size={20} aria-hidden className="text-accent" />
+      <h3 className="mt-5 text-[1.25rem] font-semibold tracking-tight text-ink">
+        Send me an email
+      </h3>
+      <p className="mt-3 max-w-[46ch] text-[0.9375rem] leading-[1.7] text-muted">
+        The quickest way to reach me. I read everything and reply to anything that is not a
+        cold sales pitch.
+      </p>
+      <div className="mt-7">
+        <LinkButton href={`mailto:${profile.email}`}>
+          {profile.email}
+          <Mail size={15} aria-hidden />
+        </LinkButton>
+      </div>
+    </div>
   );
 }
 
@@ -126,6 +151,8 @@ export function Contact({ profile }: { profile: Profile }) {
 
         <div className="lg:col-span-7">
           <Reveal delay={80}>
+            {!contactFormEnabled ? <EmailPanel profile={profile} /> : null}
+            {contactFormEnabled ? (
             <form
               onSubmit={onSubmit}
               noValidate
@@ -224,6 +251,7 @@ export function Contact({ profile }: { profile: Profile }) {
                 </div>
               </div>
             </form>
+            ) : null}
           </Reveal>
         </div>
       </div>

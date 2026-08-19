@@ -104,12 +104,31 @@ Two constraints that must not be broken:
 After editing `backend/app/content.py`, run `npm run sync:content` from `frontend/` with the
 backend up. `test_bundled_fallback_matches_api_content` fails the build if you forget.
 
+## Two build modes
+
+`npm run build` expects the backend (Docker / Fly). `npm run build:static` loads
+`frontend/.env.static`, sets `VITE_CONTACT_ENDPOINT=off`, and produces the bundle for
+Cloudflare Pages / Netlify, which is the current deployment plan.
+
+`off` swaps the contact form for a mail-link panel. Any other value is used as the POST target
+verbatim, which is how a form service gets wired in. Do not "fix" the static build by pointing
+the form back at `/api/contact` -- there is no backend there to answer it.
+
+The static build leans entirely on `frontend/src/content/fallback.json`, so a stale snapshot is
+no longer merely cosmetic: it *is* the site. Always run `npm run sync:content` after editing
+`content.py`; `test_bundled_fallback_matches_api_content` is the guard.
+
+The resume exists twice on purpose -- `backend/static/resume.pdf` (source of truth) and
+`frontend/public/resume.pdf` (what the static build serves, since `/api/resume` does not exist
+there). `test_public_resume_matches_backend_copy` fails if they drift. Update both, never one.
+
 ## Checks before saying done
 
 ```powershell
 cd backend;  .\.venv\Scripts\python.exe -m ruff check .  # lint gate, also runs in CI
-cd backend;  .\.venv\Scripts\python.exe -m pytest -q     # 20 tests
+cd backend;  .\.venv\Scripts\python.exe -m pytest -q     # 21 tests
 cd frontend; npm run build                               # type-check + build
+cd frontend; npm run build:static                        # the bundle that actually ships
 ```
 
 To exercise the deployed single-origin shape locally, without Docker:
