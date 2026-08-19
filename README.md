@@ -177,9 +177,14 @@ self-hosting path uses.
 
 ### Two things the static build depends on
 
-- **`frontend/public/_redirects`** — `/* /index.html 200`, understood by both Netlify and
-  Cloudflare Pages. React Router owns `/projects/:slug` client-side, so without this every deep
-  link 404s. `vite preview` does not apply it; only the host does.
+- **`frontend/wrangler.jsonc`** — declares `dist/` as the asset directory and sets
+  `not_found_handling` to `single-page-application`, so React Router's `/projects/:slug` deep
+  links resolve instead of 404ing.
+
+  There is deliberately **no `_redirects` file**. Workers parses one if present and rejects the
+  usual SPA catch-all (`/* /index.html 200`) as an infinite loop, which fails the *deploy* after
+  a successful build — an easy error to misread, since the build log is green right up to it.
+  Moving to Netlify would mean adding that file back, and dropping this one.
 - **`frontend/public/resume.pdf`** — a copy of `backend/static/resume.pdf`, since `resumeUrl`
   cannot go through `/api/resume` with no API. `test_public_resume_matches_backend_copy` fails
   the build if the two drift, so updating the résumé means copying it to both.

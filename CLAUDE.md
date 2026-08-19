@@ -113,8 +113,9 @@ Do not reintroduce it.
 
 The static build depends on two files that are easy to overlook:
 
-- **`frontend/public/_redirects`** — `/* /index.html 200`. React Router owns `/projects/:slug`
-  client-side, so without it every deep link 404s on the host. `vite preview` ignores it.
+- **`frontend/wrangler.jsonc`** — declares the asset directory and the SPA fallback via
+  `not_found_handling`. Do **not** add a `_redirects` file alongside it: Workers parses one and
+  rejects `/* /index.html 200` as an infinite loop, failing the deploy after a green build.
 - **`frontend/public/resume.pdf`** — the static copy of `backend/static/resume.pdf`, because
   `/api/resume` does not exist in production. `test_public_resume_matches_backend_copy` fails
   on drift.

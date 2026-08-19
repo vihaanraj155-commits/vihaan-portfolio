@@ -1,6 +1,0 @@
-# SPA fallback. React Router owns /projects/:slug and /404 client-side, so every unmatched
-# path must return index.html with a 200 -- a 301/302 here would break deep links and let
-# crawlers see redirects instead of pages.
-#
-# Understood by both Netlify and Cloudflare Pages.
-/*    /index.html   200
