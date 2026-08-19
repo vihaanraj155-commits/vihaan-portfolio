@@ -98,7 +98,7 @@ def mount_frontend(app: FastAPI, dist_dir: Path) -> bool:
             if "." in spa_path.rsplit("/", 1)[-1]:
                 raise HTTPException(status_code=404, detail="Not found")
 
-        # Anything else is a client-side route such as /projects/tellme-interface. React Router
+        # Anything else is a client-side route such as /projects/tellme. React Router
         # resolves it in the browser, so a hard refresh has to return the shell.
         return index_response()
 

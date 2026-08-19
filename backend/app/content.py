@@ -51,11 +51,13 @@ PROFILE = Profile(
         "a system is allowed to know before it is allowed to answer.",
         "I work on that with a team at Rutgers WINLAB, part of the NSF Center for Smart "
         "Streetscapes, led by Prof. Jorge Ortiz and with PhD mentors including Taqiya "
-        "Ehsan. My own contribution has been mostly on TeLLMe, the query system: I built the "
-        "frontend and the integration layer that binds a live instrumented room and the CARLA "
-        "simulator to the query pipeline, and got those pieces working together end to end. "
-        "Being the person who connects the parts turns out to be a good way to learn how all "
-        "of them work.",
+        "Ehsan. My own contribution has been mostly on TeLLMe, the layer that decides what an "
+        "agent is allowed to touch before it plans anything: I built the frontend, the "
+        "integration layer binding a live instrumented room and the CARLA simulator into one "
+        "context format, and the proxy routes that filter everything on its way to the "
+        "browser. On the planner side I widened the library of pre-verified templates that "
+        "lets common requests skip a full model-checking run. Being the person who connects "
+        "the parts turns out to be a good way to learn how all of them work.",
         "Outside the lab I spend a lot of time in cybersecurity labs — reverse engineering, "
         "Linux internals, memory and binary analysis — because understanding how systems fail "
         "is the fastest way to learn to build ones that do not. I also write the control "
@@ -90,115 +92,66 @@ RESEARCH_CONTEXT = (
 
 PROJECTS: list[Project] = [
     Project(
-        slug="tellme-interface",
-        title="TeLLMe Interface & Integration",
-        subtitle="Privacy-preserving smart-space query",
+        slug="tellme",
+        title="TeLLMe",
+        subtitle="Grounded, privacy-bounded smart-space query",
         year="2026",
-        role="Frontend architecture & systems integration",
+        role="Frontend & systems integration",
         featured=True,
         accent="violet",
         context=RESEARCH_CONTEXT,
         summary=(
-            "The conversational interface for a privacy-bounded smart-space query system, plus "
-            "the integration layer connecting live smart-room sensors and the CARLA simulator "
-            "to the query pipeline."
+            "A grounded query interface for an instrumented space: a policy layer that decides "
+            "which operations and data an agent may use before any planning begins, with the "
+            "interface and integration layer that connect it to live sensors and the CARLA "
+            "simulator."
         ),
         contribution=[
-            "Built the entire frontend: the conversational workspace, the staged progress view "
-            "that surfaces decomposition, verification, and synthesis as they happen, and the "
-            "result views for answers, sensor attribution, and evidence.",
-            "Designed and implemented the API integration layer binding the smart-room sensor "
-            "stack and the CARLA simulator to the TeLLMe query backend, normalizing both "
-            "context sources into the single timestamped format the pipeline consumes.",
-            "Implemented the server-side proxy routes that keep the runner address and raw "
-            "payloads off the client, giving the system one place to validate and "
-            "privacy-filter every response.",
-            "Brought the end-to-end path online — sensor context through routing and "
-            "verification to a rendered answer — and got the components working together as a "
-            "single running system.",
+            "Built the frontend for TeLLMe, the policy layer that determines which operations "
+            "and data an agent may use before any planning begins.",
+            "Built the API integration layer binding live smart-room sensors and the CARLA city "
+            "simulator into a single normalized, timestamped context format, letting one query "
+            "pipeline run over both physical and simulated environments.",
+            "Implemented the server-side proxy routes that validate and privacy-filter every "
+            "browser-facing response, keeping raw video, identities, and backend addresses off "
+            "the client.",
         ],
         highlights=[
-            "Staged progress UI shows each phase of a multi-stage agentic query as it "
-            "completes, rather than hiding the work behind a spinner.",
+            "The policy layer runs first and deterministically: a query outside its bounds is "
+            "refused before a model is ever involved.",
+            "Allowed queries become constrained execution plans rather than open-ended prompts.",
+            "Fuses timestamped context from video, audio, radar, and Wi-Fi into occupancy, "
+            "motion, and room-state JSON carrying confidence scores and evidence references "
+            "instead of the evidence itself.",
+            "One normalized interface accepts context from both a physical instrumented room "
+            "and the CARLA simulator.",
             "A single server-side choke point validates and filters every response, so raw "
-            "captures, identities, and internal paths never reach the browser.",
-            "Answers carry sensor attribution and verification status, so a reader can see "
-            "what a claim rests on.",
-            "Accepts context from both a physical instrumented room and the CARLA simulator "
-            "through one normalized interface.",
-            "Falls back to a deterministic mode when no model API is configured.",
+            "captures, identities, and internal addresses never reach the browser.",
         ],
         body=[
-            "TeLLMe answers natural-language questions about an instrumented space without "
-            "handing over the footage or the identities behind the answer. It is a team "
-            "project; my work on it was the interface and the plumbing — everything between "
-            "the sensors and the person asking the question.",
-            "The integration side was the harder half. Context arrives from two very different "
-            "places: a real smart room full of sensors, and CARLA, the driving simulator used "
-            "to model street scenes. The query pipeline needs one consistent shape regardless "
-            "of origin, so I built the API layer that binds both to the backend and normalizes "
-            "them into the same timestamped context format, then wired the full path through "
-            "routing and verification out to a rendered answer.",
-            "On the interface side, the browser never talks to the query runner directly. It "
-            "calls same-origin routes, and the server contacts the runner — which keeps the "
-            "backend address server-side and creates exactly one place where responses get "
-            "validated and filtered before anyone can see them. Multi-stage agentic work is "
-            "also slow enough that a spinner is a bad answer, so the UI shows each stage "
-            "landing, and every answer arrives with its verification status and the sensors it "
-            "drew on attached.",
+            "The easy way to answer questions about a room is to pipe everything the sensors "
+            "saw into a model and trust the prompt to behave. That trade — identities and raw "
+            "captures for convenience — is the one TeLLMe exists to avoid. It answers natural "
+            "language questions about an instrumented space without handing over the footage "
+            "or the identities behind the answer.",
+            "The grounding happens before any planning does. A policy layer reads the query and "
+            "decides which operations and which data an agent is allowed to touch; anything "
+            "outside those bounds is refused up front, deterministically, with no model in the "
+            "loop. What survives is compiled into a constrained plan, and the context it runs "
+            "against is already filtered — occupancy, motion, audio events, room state, each "
+            "with a confidence value and a pointer to the evidence rather than the evidence.",
+            "It is team research. My part was the frontend and the plumbing: everything between "
+            "the sensors and the person asking the question. The integration side was the "
+            "harder half, because context arrives from two very different places — a real smart "
+            "room full of sensors, and CARLA, the driving simulator used to model street scenes "
+            "— and the pipeline needs one consistent shape regardless of origin. I built the "
+            "API layer that binds both and normalizes them into the same timestamped format.",
+            "The browser also never talks to the query runner directly. It calls same-origin "
+            "routes and the server contacts the runner, which keeps the backend address "
+            "server-side and creates exactly one place where responses are validated and "
+            "privacy-filtered before anyone can see them.",
         ],
         stack=["Next.js", "React", "TypeScript", "Tailwind CSS", "Python", "CARLA"],
-        links=[],
-    ),
-    Project(
-        slug="tellme-harness",
-        title="TeLLMe Harness",
-        subtitle="Deterministic privacy routing",
-        year="2026",
-        role="Research contributor",
-        featured=False,
-        accent="teal",
-        context=RESEARCH_CONTEXT,
-        summary=(
-            "The query layer behind TeLLMe, which decides deterministically — before any model "
-            "is involved — whether a question can be answered without exposing raw captures or "
-            "identities."
-        ),
-        contribution=[
-            "Connected the harness to live context sources, so it ran against real smart-room "
-            "and CARLA data rather than fixtures.",
-            "Worked on the request and response contract the harness exposes, which is the "
-            "boundary the interface depends on.",
-            "Tested the end-to-end path and helped resolve integration failures between the "
-            "routing layer and the components on either side of it.",
-        ],
-        highlights=[
-            "Deterministic privacy-bounded routing runs first and can refuse a query outright, "
-            "with no model in the loop.",
-            "Allowed queries become constrained, dry-run execution plans instead of open-ended "
-            "prompts.",
-            "Fuses timestamped context from video, audio, radar, and Wi-Fi into occupancy, "
-            "motion, and room-state JSON with confidence scores and evidence references.",
-            "Separate context and answer validators bound what a model may see and what it is "
-            "permitted to say.",
-            "Every run is logged locally so any answer can be audited after the fact.",
-        ],
-        body=[
-            "The shortest path to answering questions about a room is to pipe everything the "
-            "sensors saw into a model and trust the prompt to behave. That trade — identities "
-            "and raw captures for convenience — is the one this harness exists to avoid. It is "
-            "team research; my part was integration rather than the routing design itself.",
-            "The first stage is deterministic and has no model in it at all. A router reads the "
-            "query, applies an explicit policy, and if the question cannot be answered inside "
-            "its bounds it is refused right there. Queries that make it through are compiled "
-            "into constrained execution plans, and the context they run against is already "
-            "filtered: occupancy, motion, audio events, room state, each with a confidence "
-            "value and a pointer to the evidence rather than the evidence itself.",
-            "Validators sit on both sides of the model — one bounds what goes in, the other "
-            "checks what comes out. Everything is logged, because a privacy guarantee nobody "
-            "can audit is just a claim.",
-        ],
-        stack=["Python", "Pydantic", "Streamlit", "LLM tool-calling", "pytest"],
         links=[],
     ),
     Project(
@@ -216,11 +169,12 @@ PROJECTS: list[Project] = [
             "applications from the verified plan."
         ),
         contribution=[
-            "Contributed across the project, primarily through the TeLLMe layer that feeds "
+            "Expanded the verified-template library behind the planner's deterministic fast "
+            "path, authoring and stress-testing templates for previously unseen query types.",
+            "Contributed to a group effort that cut runtime from roughly 20 minutes to 20-30 "
+            "seconds with no loss of model-checking coverage.",
+            "Contributed to the wider stack primarily through TeLLMe, the layer that feeds "
             "requirements into the planner.",
-            "Helped connect the planning pipeline to the interface and context sources so the "
-            "stack could be exercised end to end.",
-            "Assisted with testing and integration as the pieces came together.",
         ],
         highlights=[
             "Decomposes user intent into structured application requirements, then generates "
@@ -233,12 +187,15 @@ PROJECTS: list[Project] = [
             "dedicated monitor app.",
             "Ships a benchmark harness for comparing verified and unverified agent stacks on "
             "the same task set.",
+            "A library of pre-verified templates gives common request shapes a deterministic "
+            "fast path, skipping the full model-checking run without weakening its guarantees.",
         ],
         body=[
             "A group of agents working on the same task is really just a concurrent program, "
             "and we already know how to reason about concurrent programs. We mostly stop doing "
             "it when the processes happen to be language models. This is a team attempt to "
-            "keep doing it; I contributed mainly from the TeLLMe side.",
+            "keep doing it. I contributed through TeLLMe, which feeds the planner, and by "
+            "expanding the verified-template library behind its fast path.",
             "A request enters as plain language and is broken into structured requirements. "
             "From those, the planner builds an intermediate representation naming every agent, "
             "the resources they compete for, and the channels they talk over. That "
@@ -250,6 +207,12 @@ PROJECTS: list[Project] = [
             "Whatever survives becomes a verified module plan, which a synthesizer turns into "
             "one deployable app per agent plus a monitor. The planner never runs the agents "
             "itself — keeping that line sharp is what makes the guarantee mean anything.",
+            "Full verification is expensive, so requests matching an already-verified template "
+            "take a deterministic fast path instead. Widening that library is most of what I "
+            "did here: writing templates for query shapes it had not seen and stress-testing "
+            "them. Together with the rest of the group's work it brought a run down from "
+            "roughly twenty minutes to twenty or thirty seconds, without giving up any "
+            "model-checking coverage.",
         ],
         stack=["Python", "TLA+ / PlusCal", "TLC", "Pydantic", "FastAPI", "pytest"],
         links=[],
@@ -310,9 +273,9 @@ PROJECTS: list[Project] = [
 
 EXPERIENCE: list[ExperienceItem] = [
     ExperienceItem(
-        org="Rutgers University — NSF Center for Smart Streetscapes (CS3)",
-        role="Student Researcher",
-        period="2026 — Present",
+        org="Rutgers WINLAB — NSF Center for Smart Streetscapes (CS3)",
+        role="Research Intern",
+        period="July 2026 — Present",
         location="WINLAB, Rutgers University",
         summary=(
             "Research on privacy-bounded smart-space query systems with Prof. Jorge Ortiz, "
@@ -320,15 +283,21 @@ EXPERIENCE: list[ExperienceItem] = [
             "researchers."
         ),
         bullets=[
-            "Built the frontend for TeLLMe, a system that answers natural-language questions "
-            "about an instrumented space without exposing raw captures or identities.",
-            "Designed and implemented the API integration layer connecting a live smart room "
-            "and the CARLA simulator to the query pipeline, normalizing both into one "
-            "timestamped context format.",
-            "Brought the end-to-end path online — sensor context through routing and "
-            "verification to a rendered answer — and got the components running as one system.",
-            "Contributed to the wider CityOS agentic planning work, primarily through the "
-            "TeLLMe layer that feeds it.",
+            "Selected as one of 8 high school interns across four research groups building an "
+            "agentic stack that turns a natural-language prompt into a verified, deployable "
+            "distributed application.",
+            "Built the frontend for TeLLMe, the policy layer that determines which operations "
+            "and data an agent may use before any planning begins.",
+            "Built the API integration layer binding live smart-room sensors and the CARLA city "
+            "simulator into a single normalized, timestamped context format, letting one query "
+            "pipeline run over both physical and simulated environments.",
+            "Implemented server-side proxy routes that validate and privacy-filter every "
+            "browser-facing response, keeping raw video, identities, and backend addresses off "
+            "the client.",
+            "Expanded the verified-template library behind the planner's deterministic fast "
+            "path, contributing to a group effort that cut runtime from roughly 20 minutes to "
+            "20-30 seconds with no loss of model-checking coverage.",
+            "Invited by the faculty lead to continue on the project through the academic year.",
         ],
         tags=["Smart Spaces", "Privacy", "Systems Integration", "React", "Python"],
     ),

@@ -44,9 +44,20 @@ Ehsan. Vihaan joined in 2026. It is **not** Vihaan's solo work. Only Prof. Ortiz
 Ehsan are named on the site by choice; other mentors and researchers are referred to
 collectively. Do not add further individual names without asking.
 
-His actual contribution was the TeLLMe frontend plus the API integration layer binding the
-smart-room sensors and the CARLA simulator to the query pipeline, and getting the system
-running end to end. On CityOS he contributed more broadly but mainly through TeLLMe.
+His actual contribution, taken verbatim from the 2026 résumé, is four things: the TeLLMe
+frontend; the API integration layer binding smart-room sensors and the CARLA simulator into one
+normalized, timestamped context format; the server-side proxy routes that validate and
+privacy-filter browser-facing responses; and expanding the verified-template library behind the
+CityOS planner's deterministic fast path, part of a group effort that cut runtime from ~20
+minutes to 20-30 seconds. On CityOS he otherwise contributed mainly through TeLLMe.
+
+An earlier draft also credited him with "getting the system running end to end". The résumé does
+not claim that, so it was removed -- do not reintroduce it. Site copy about this work should
+track the résumé bullets and nothing beyond them.
+
+TeLLMe is **one** project on the site, not two. It was previously split into a "TeLLMe
+Interface" and a "TeLLMe Harness" entry, which oversold one internship as two bodies of work.
+The frontend and the policy layer are parts of the same system; keep them in one `Project`.
 
 Every `Project` therefore carries:
 
