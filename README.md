@@ -128,9 +128,25 @@ image** — see below.
 
 ## Deployment
 
-The site is deployed as a **static bundle** to Cloudflare Pages: free, no card, and it
-publishes from a private repo, which matters because this one stays private (see *Privacy*).
-Netlify takes the same three settings if you prefer it.
+The site is deployed as a **static bundle** to Cloudflare, free and from a private repo.
+
+Cloudflare now creates new projects as **Workers with static assets** rather than Pages, which
+is in maintenance mode, so this is a Worker: `frontend/wrangler.jsonc` declares `dist/` as the
+asset directory and sets `not_found_handling` to `single-page-application` for React Router.
+
+Dashboard settings under **Compute -> Workers & Pages -> vihaanrajagopal -> Settings -> Build**
+must be:
+
+| Field | Value |
+| --- | --- |
+| Root directory | `frontend` |
+| Build command | `npm run build:static` |
+| Deploy command | `npx wrangler deploy` |
+| Production branch | `master` |
+
+**The build command is not optional.** Left as `None`, Cloudflare uploads the unbuilt source;
+`index.html` still points at `/src/main.tsx`, the browser cannot execute TypeScript, and the
+page renders blank with a correct title and an empty body.
 
 This works because the frontend already ships a full content snapshot. `api.ts` falls back to
 `src/content/fallback.json` whenever `/api/site` is unreachable, so with no backend at all the

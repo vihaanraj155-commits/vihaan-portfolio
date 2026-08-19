@@ -1,0 +1,17 @@
+{
+  // Cloudflare Workers static-assets deploy. Cloudflare now creates new projects as Workers
+  // rather than Pages, and `wrangler deploy` needs this file to know what to upload.
+  //
+  // The dashboard's build settings must match: root directory `frontend`, build command
+  // `npm run build:static`. Without a build command Cloudflare uploads the unbuilt source,
+  // whose index.html still points at /src/main.tsx and renders a blank page.
+  "name": "vihaanrajagopal",
+  "compatibility_date": "2026-08-19",
+  "assets": {
+    // Relative to this file, which sits in frontend/ -- the build's output directory.
+    "directory": "./dist",
+    // React Router owns /projects/:slug, so unmatched paths must serve index.html rather
+    // than a 404. This is the Workers equivalent of the _redirects SPA rule.
+    "not_found_handling": "single-page-application"
+  }
+}

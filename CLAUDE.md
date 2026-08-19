@@ -97,8 +97,14 @@ the second; `test_public_resume_matches_backend_copy` fails on drift.
 
 ## Deployment
 
-The site deploys as a **static bundle to Cloudflare Pages**: root directory `frontend`, build
-command `npm run build:static`, output directory `dist`. There is no backend in production.
+The site deploys as a **static bundle to Cloudflare**, as a Worker with static assets rather
+than a Pages project -- Cloudflare creates new projects that way now. `frontend/wrangler.jsonc`
+declares the asset directory and the SPA fallback. Dashboard build settings: root directory
+`frontend`, build command `npm run build:static`, deploy command `npx wrangler deploy`. There is
+no backend in production.
+
+If the live site ever renders a blank page with the right title, check the build command first:
+with none set, Cloudflare deploys the unbuilt source and `index.html` points at `/src/main.tsx`.
 Cloudflare builds from its own git integration, so `.github/workflows/ci.yml` is checks-only
 (ruff + pytest + `npm run build`) and deploys nothing.
 

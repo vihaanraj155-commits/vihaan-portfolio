@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vihaan-portfolio.pages.dev/sitemap.xml
+Sitemap: https://vihaanrajagopal.vihaanraj155.workers.dev/sitemap.xml
