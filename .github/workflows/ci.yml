@@ -81,6 +81,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+
+      # The site deploys via Cloudflare Pages, which builds from its own git integration and
+      # needs nothing here. Fly is kept as a working alternative, so this deploys only when a
+      # token is actually configured rather than failing every push with a red X.
+      - name: Deploy to Fly.io when configured
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -z "$FLY_API_TOKEN" ]; then
+            echo "No FLY_API_TOKEN secret set -- skipping the Fly deploy."
+            exit 0
+          fi
+          flyctl deploy --remote-only
