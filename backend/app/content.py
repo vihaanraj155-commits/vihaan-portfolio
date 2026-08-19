@@ -218,6 +218,51 @@ PROJECTS: list[Project] = [
         links=[],
     ),
     Project(
+        slug="blue-ocean-smart-faucet",
+        title="Smart Faucet Leak Detection",
+        subtitle="Backend for a water-efficiency device",
+        year="2026",
+        role="Backend & system logic",
+        featured=False,
+        accent="teal",
+        context="Built with a team for the Blue Ocean Entrepreneurship Competition.",
+        summary=(
+            "The backend for a smart faucet attachment that watches household water flow "
+            "continuously and catches the small persistent leaks a person never notices. The "
+            "entry placed in the top 1,000 worldwide out of more than 5,000 submissions."
+        ),
+        contribution=[
+            "Built the backend logic behind leak detection and real-time monitoring.",
+            "Designed the data flow and system logic carrying continuous sensor readings "
+            "through to a usable signal.",
+        ],
+        highlights=[
+            "Targets micro-leaks specifically: the slow, steady losses that never announce "
+            "themselves the way a burst pipe does.",
+            "Monitors continuously rather than sampling, so a leak is caught while it is "
+            "happening instead of showing up on a bill weeks later.",
+            "Attaches to an existing faucet rather than requiring new plumbing, which is what "
+            "makes it deployable in an ordinary home.",
+            "Estimated to cut household water waste by 10-20%.",
+        ],
+        body=[
+            "Most household water loss is not dramatic. A burst pipe gets noticed within "
+            "minutes; a faucet losing a little continuously can run for months, and the only "
+            "evidence is a bill that seems slightly high. That gap between the leaks people "
+            "notice and the leaks that actually waste the most water is what this device aims "
+            "at.",
+            "It is an attachment rather than a replacement, so it fits a faucet that already "
+            "exists. My work was the backend: taking a continuous stream of sensor readings "
+            "and turning it into something that can actually say a leak is happening now. That "
+            "means deciding what the data flow looks like end to end, and what separates a "
+            "genuine slow leak from the ordinary noise of a tap being used.",
+            "It went in to the Blue Ocean Entrepreneurship Competition and placed in the top "
+            "1,000 of more than 5,000 submissions worldwide.",
+        ],
+        stack=["JavaScript"],
+        links=[],
+    ),
+    Project(
         slug="parallax-vex-pushback",
         title="VEX Push Back Robot",
         subtitle="Competition robot control system",
