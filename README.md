@@ -19,12 +19,16 @@ remains:
       site before it goes live.
 - [ ] **Portrait** — intentionally blank; the About section shows a "VR" monogram. Add
       `frontend/public/portrait.jpg` when a photo exists.
-- [ ] **Domain** — `vihaanrajagopal.com` is still assumed in `index.html`, `robots.txt`,
-      and `sitemap.xml`
+- [ ] **Domain** — the site currently publishes as `vihaan-portfolio.fly.dev`, which is what
+      `index.html`, `robots.txt` and `sitemap.xml` now point at. See *Deployment* for the
+      switch to a custom domain.
+
+**Collaborator names are the one blocker that matters before sharing the URL widely** — the
+site is publicly reachable the moment it deploys, named mentors included.
 
 Confirmed and in place: name, email, location, GitHub, education, all seven experience
-entries, the WINLAB / NSF CS3 affiliation and 2026 start, project attribution, and the real
-résumé PDF.
+entries, the WINLAB / NSF CS3 affiliation and 2026 start, project attribution, and the
+résumé PDF (phone number removed for publication).
 
 ### How attribution works
 
@@ -119,6 +123,78 @@ docker compose up --build
 Site on <http://localhost:8080>; nginx serves the bundle and reverse-proxies `/api` to the
 backend, so everything is one origin and CORS never applies. Contact submissions persist in the
 `contact-data` volume.
+
+This two-container stack is for local prod-like runs. **Deployment uses a different, simpler
+image** — see below.
+
+---
+
+## Deployment
+
+The deployed site is a **single container**: the root `Dockerfile` builds the React bundle in a
+Node stage, then FastAPI serves both that bundle and the API from one origin on port 8000
+(`backend/app/spa.py`). No nginx, one machine, no CORS.
+
+### First-time setup
+
+```powershell
+# 1. Install flyctl and sign in
+iwr https://fly.io/install.ps1 -useb | iex
+fly auth login
+
+# 2. Create the app. Use `apps create`, NOT `fly launch` -- launch runs a framework scanner
+#    that will overwrite the committed fly.toml.
+fly apps create vihaan-portfolio
+
+# 3. Create the data volume, in the same region as primary_region in fly.toml.
+#    Without it, every contact submission is wiped on each deploy.
+fly volumes create portfolio_data --region ewr --size 1 --yes
+
+# 4. Contact-form email. Sign up at resend.com WITH THE SAME ADDRESS you set as SMTP_TO --
+#    until a domain is verified, Resend's shared sender only delivers to the account owner.
+fly secrets set `
+  SMTP_HOST="smtp.resend.com" SMTP_PORT="587" `
+  SMTP_USER="resend" SMTP_PASSWORD="re_your_api_key" `
+  SMTP_FROM="onboarding@resend.dev" SMTP_TO="vihaanraj155@gmail.com"
+
+# 5. First deploy by hand, so CI inherits a known-good state
+fly deploy --remote-only
+
+# 6. Hand deploys to CI
+fly tokens create deploy -a vihaan-portfolio
+gh secret set FLY_API_TOKEN --repo vihaanraj155-commits/vihaan-portfolio
+```
+
+After that, every push to `master` runs `.github/workflows/ci.yml` — ruff, pytest, and
+`npm run build` — and deploys only if all three pass.
+
+### Verifying a deploy
+
+```bash
+curl -sI https://vihaan-portfolio.fly.dev/                      # 200 html, no-store
+curl -sI https://vihaan-portfolio.fly.dev/projects/tellme-harness  # 200 html (deep link)
+curl -s  https://vihaan-portfolio.fly.dev/api/health            # environment: production
+curl -sI https://vihaan-portfolio.fly.dev/api/nonexistent       # 404 JSON, never HTML
+fly logs -a vihaan-portfolio
+fly ssh console -a vihaan-portfolio -C "ls -ld /app/data"       # must be appuser-owned
+```
+
+Then submit the contact form for real. `send_notification` **swallows every SMTP exception**,
+so a broken mail config still returns 200 to the browser — the missing email and a
+`Failed to relay contact submission by email` line in `fly logs` are the only signals.
+
+### Constraints
+
+- **One machine.** `services/rate_limit.py` holds its window in process memory, and the volume
+  attaches to a single machine. Never `fly scale count 2`, never add `--workers`.
+- **Deploys have a few seconds of downtime.** One machine plus a mounted volume means a rolling
+  replace; blue-green is not available.
+
+### Moving to a custom domain
+
+`vihaan-portfolio.fly.dev` is hardcoded in `frontend/index.html` (canonical, `og:url`,
+`og:image`, JSON-LD), `frontend/public/robots.txt` and `frontend/public/sitemap.xml`. To switch:
+replace it in those three files, then `fly certs add <domain>` and point DNS at `fly ips list`.
 
 ---
 
