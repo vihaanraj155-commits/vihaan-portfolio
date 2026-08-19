@@ -25,7 +25,7 @@ remains:
 
 Confirmed and in place: name, email, location, GitHub, education, all seven experience
 entries, the WINLAB / NSF CS3 affiliation and 2026 start, project attribution, and the
-résumé PDF (phone number removed for publication).
+résumé PDF (published complete, phone number included, by Vihaan's decision).
 
 ### How attribution works
 

@@ -82,14 +82,18 @@ is now only the `onError` fallback in `About.tsx`, so do not treat it as the int
 
 ## Privacy
 
-`backend/static/resume.pdf` is served publicly at `/api/resume` by the deployed site, so it is
-the **phone-free** version: it was regenerated from `Vihaan_Rajagopal_Resume_2026.docx` with the
-`| (m) <number>` fragment removed from the header line. Keep it that way — anything added to that
-PDF is world-readable the moment it deploys.
+The résumé PDF **intentionally includes Vihaan's phone number**. An earlier revision stripped it
+and this file used to require that; Vihaan reversed that decision on 2026-08-19, on the grounds
+that a phone number on a résumé is ordinary and it is his to publish. Do not strip it again, and
+do not treat its presence as a mistake to be fixed.
 
-The **earlier** résumé, which did contain the phone number, is still in git history. That is
-harmless while the repo is private, but the history must be rewritten before the repo is ever
-made public.
+Because the number was the entire reason the repo had to stay private, that constraint is gone
+too: the history no longer needs rewriting before the repo can be made public. Whether to make
+it public is still Vihaan's call, not an inference to act on.
+
+The PDF is generated from `Vihaan_Rajagopal_Resume_2026.docx` via Word, and lives in two places
+— `backend/static/resume.pdf` and `frontend/public/resume.pdf`. Regenerate to the first, copy to
+the second; `test_public_resume_matches_backend_copy` fails on drift.
 
 ## Deployment
 
