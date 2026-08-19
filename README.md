@@ -19,9 +19,9 @@ remains:
       Consent to be named on a public site confirmed by Vihaan on 2026-08-18.
 - [x] **Portrait** — `frontend/public/portrait.jpg` is in place; the "VR" monogram now only
       shows if the image fails to load.
-- [ ] **Domain** — the site currently publishes as `vihaan-portfolio.fly.dev`, which is what
-      `index.html`, `robots.txt` and `sitemap.xml` now point at. See *Deployment* for the
-      switch to a custom domain.
+- [ ] **Domain** — `index.html`, `robots.txt` and `sitemap.xml` assume
+      `vihaan-portfolio.pages.dev`, the Cloudflare default for this repo name. Confirm it
+      against the real deployment, or see *Deployment* for the switch to a custom domain.
 
 Confirmed and in place: name, email, location, GitHub, education, all seven experience
 entries, the WINLAB / NSF CS3 affiliation and 2026 start, project attribution, and the
@@ -126,10 +126,11 @@ image** — see below.
 
 ---
 
-## Deployment — static hosting (current plan)
+## Deployment
 
-The site is deployed as a **static bundle** to Cloudflare Pages or Netlify: free, no card, and
-it publishes from a private repo, which matters because this one stays private (see *Privacy*).
+The site is deployed as a **static bundle** to Cloudflare Pages: free, no card, and it
+publishes from a private repo, which matters because this one stays private (see *Privacy*).
+Netlify takes the same three settings if you prefer it.
 
 This works because the frontend already ships a full content snapshot. `api.ts` falls back to
 `src/content/fallback.json` whenever `/api/site` is unreachable, so with no backend at all the
@@ -156,7 +157,7 @@ VITE_CONTACT_ENDPOINT=https://formspree.io/f/your-id
 Anything that is not `off` is used as the POST target verbatim, absolute URLs included.
 
 `npm run build` (no mode) is unchanged and still expects the backend — that is what the Docker
-and Fly paths below use.
+self-hosting path uses.
 
 ### Two things the static build depends on
 
@@ -169,77 +170,8 @@ and Fly paths below use.
 
 ### Still to do before the URL is shared
 
-The hostname in `frontend/index.html`, `robots.txt` and `sitemap.xml` still says
-`vihaan-portfolio.fly.dev`. Replace it with the real one once the host assigns it.
-
----
-
-## Deployment — Fly.io (alternative, ~$3-4/month)
-
-The deployed site is a **single container**: the root `Dockerfile` builds the React bundle in a
-Node stage, then FastAPI serves both that bundle and the API from one origin on port 8000
-(`backend/app/spa.py`). No nginx, one machine, no CORS.
-
-### First-time setup
-
-```powershell
-# 1. Install flyctl and sign in
-iwr https://fly.io/install.ps1 -useb | iex
-fly auth login
-
-# 2. Create the app. Use `apps create`, NOT `fly launch` -- launch runs a framework scanner
-#    that will overwrite the committed fly.toml.
-fly apps create vihaan-portfolio
-
-# 3. Create the data volume, in the same region as primary_region in fly.toml.
-#    Without it, every contact submission is wiped on each deploy.
-fly volumes create portfolio_data --region ewr --size 1 --yes
-
-# 4. Contact-form email. Sign up at resend.com WITH THE SAME ADDRESS you set as SMTP_TO --
-#    until a domain is verified, Resend's shared sender only delivers to the account owner.
-fly secrets set `
-  SMTP_HOST="smtp.resend.com" SMTP_PORT="587" `
-  SMTP_USER="resend" SMTP_PASSWORD="re_your_api_key" `
-  SMTP_FROM="onboarding@resend.dev" SMTP_TO="vihaanraj155@gmail.com"
-
-# 5. First deploy by hand, so CI inherits a known-good state
-fly deploy --remote-only
-
-# 6. Hand deploys to CI
-fly tokens create deploy -a vihaan-portfolio
-gh secret set FLY_API_TOKEN --repo vihaanraj155-commits/vihaan-portfolio
-```
-
-After that, every push to `master` runs `.github/workflows/ci.yml` — ruff, pytest, and
-`npm run build` — and deploys only if all three pass.
-
-### Verifying a deploy
-
-```bash
-curl -sI https://vihaan-portfolio.fly.dev/                      # 200 html, no-store
-curl -sI https://vihaan-portfolio.fly.dev/projects/tellme-harness  # 200 html (deep link)
-curl -s  https://vihaan-portfolio.fly.dev/api/health            # environment: production
-curl -sI https://vihaan-portfolio.fly.dev/api/nonexistent       # 404 JSON, never HTML
-fly logs -a vihaan-portfolio
-fly ssh console -a vihaan-portfolio -C "ls -ld /app/data"       # must be appuser-owned
-```
-
-Then submit the contact form for real. `send_notification` **swallows every SMTP exception**,
-so a broken mail config still returns 200 to the browser — the missing email and a
-`Failed to relay contact submission by email` line in `fly logs` are the only signals.
-
-### Constraints
-
-- **One machine.** `services/rate_limit.py` holds its window in process memory, and the volume
-  attaches to a single machine. Never `fly scale count 2`, never add `--workers`.
-- **Deploys have a few seconds of downtime.** One machine plus a mounted volume means a rolling
-  replace; blue-green is not available.
-
-### Moving to a custom domain
-
-`vihaan-portfolio.fly.dev` is hardcoded in `frontend/index.html` (canonical, `og:url`,
-`og:image`, JSON-LD), `frontend/public/robots.txt` and `frontend/public/sitemap.xml`. To switch:
-replace it in those three files, then `fly certs add <domain>` and point DNS at `fly ips list`.
+The hostname in `frontend/index.html`, `robots.txt` and `sitemap.xml` assumes
+`vihaan-portfolio.pages.dev`. Replace it if Cloudflare assigns something else.
 
 ---
 

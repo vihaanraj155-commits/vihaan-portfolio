@@ -45,7 +45,7 @@ COPY --from=web /web/dist ./frontend_dist
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-# Contact submissions are written here. fly.toml mounts a volume over it so they survive a
+# Contact submissions are written here. Mount a volume over it so they survive a
 # deploy -- without that mount the machine's filesystem is ephemeral and messages are lost.
 RUN mkdir -p /app/data \
     && chmod +x /usr/local/bin/docker-entrypoint.sh \

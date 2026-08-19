@@ -21,7 +21,7 @@
 **/.ruff_cache
 **/*.egg-info
 
-# Local runtime data and secrets; the deployed app uses a Fly volume and Fly secrets.
+# Local runtime data and secrets; a deployed container uses a mounted volume and injected env.
 backend/data
 **/.env
 **/.env.local

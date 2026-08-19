@@ -62,8 +62,8 @@ without Prof. Ortiz's permission. This repo only *describes* the research, which
 
 ## Still unconfirmed
 
-- The site publishes as `vihaan-portfolio.fly.dev`, hardcoded in `index.html`, `robots.txt`
-  and `sitemap.xml`. Moving to a custom domain means editing those three, then `fly certs add`.
+- The production hostname is assumed to be `vihaan-portfolio.pages.dev`, the Cloudflare
+  default for this repo name. Confirm it against the real deployment.
 
 Settled: Vihaan confirmed on 2026-08-18 that the named collaborators consent to appearing on
 the public site. The portrait is in place at `frontend/public/portrait.jpg`; the "VR" monogram
@@ -82,31 +82,38 @@ made public.
 
 ## Deployment
 
-The site is one container on Fly.io: the root `Dockerfile` builds the React bundle in a Node
-stage and hands it to FastAPI, which serves the SPA and the API from a single origin on port
-8000. `backend/app/spa.py` is what nginx used to do — immutable caching for `/assets`, `no-store`
-for `index.html`, and a history-API fallback.
+The site deploys as a **static bundle to Cloudflare Pages**: root directory `frontend`, build
+command `npm run build:static`, output directory `dist`. There is no backend in production.
+Cloudflare builds from its own git integration, so `.github/workflows/ci.yml` is checks-only
+(ruff + pytest + `npm run build`) and deploys nothing.
 
-`docker-compose.yml` and the two per-service Dockerfiles are unchanged and still run the local
-nginx-fronted stack; they are not what deploys.
+Nothing about this is Fly-specific any more; Fly was removed because it has no free tier.
+Do not reintroduce it.
 
-Pushing to `master` runs `.github/workflows/ci.yml`, which gates on ruff + pytest + `npm run
-build` and then deploys to Fly. Runtime secrets (SMTP) live in `fly secrets`, never in the repo
-or in GitHub.
+The static build depends on two files that are easy to overlook:
 
-Two constraints that must not be broken:
+- **`frontend/public/_redirects`** — `/* /index.html 200`. React Router owns `/projects/:slug`
+  client-side, so without it every deep link 404s on the host. `vite preview` ignores it.
+- **`frontend/public/resume.pdf`** — the static copy of `backend/static/resume.pdf`, because
+  `/api/resume` does not exist in production. `test_public_resume_matches_backend_copy` fails
+  on drift.
 
-- **One machine only.** `services/rate_limit.py` keeps its window in process memory and the
-  data volume attaches to a single machine. Never `fly scale count 2`, never add `--workers`.
-- **The catch-all route must stay last.** `mount_frontend()` is called after every
-  `include_router`; reversing that order makes the SPA swallow the entire API.
+The hostname `vihaan-portfolio.pages.dev` is hardcoded in `index.html`, `robots.txt` and
+`sitemap.xml`. A custom domain means editing those three and adding it in the Cloudflare
+dashboard.
+
+The root `Dockerfile`, `docker-entrypoint.sh` and `backend/app/spa.py` still build a working
+single-container image serving the SPA and API from one origin, and `docker-compose.yml` still
+runs the local nginx-fronted stack. Neither is part of the deploy; they are kept only as a
+self-hosting path. If you touch `spa.py`, the catch-all route must stay last — `mount_frontend()`
+is called after every `include_router`, and reversing that makes the SPA swallow the API.
 
 After editing `backend/app/content.py`, run `npm run sync:content` from `frontend/` with the
 backend up. `test_bundled_fallback_matches_api_content` fails the build if you forget.
 
 ## Two build modes
 
-`npm run build` expects the backend (Docker / Fly). `npm run build:static` loads
+`npm run build` expects the backend (the self-hosting container path). `npm run build:static` loads
 `frontend/.env.static`, sets `VITE_CONTACT_ENDPOINT=off`, and produces the bundle for
 Cloudflare Pages / Netlify, which is the current deployment plan.
 

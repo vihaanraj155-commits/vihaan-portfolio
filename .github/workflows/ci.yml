@@ -1,4 +1,4 @@
-name: CI / Deploy
+name: CI
 
 on:
   push:
@@ -9,7 +9,8 @@ permissions:
   contents: read
 
 concurrency:
-  # Supersede in-flight checks for the same ref; the deploy job opts out of cancellation.
+  # Supersede in-flight checks for the same ref. Deployment is handled by Cloudflare
+  # Pages from its own git integration, so nothing here needs to survive cancellation.
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
@@ -67,30 +68,3 @@ jobs:
 
       # `npm run build` is `tsc -b && vite build`, so this is the type-check gate too.
       - run: npm run build
-
-  deploy:
-    name: Deploy to Fly.io
-    needs: [backend, frontend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    concurrency:
-      # One machine and one volume, so overlapping releases would fight. Never cancel a
-      # half-finished deploy.
-      group: deploy-production
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v4
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-
-      # The site deploys via Cloudflare Pages, which builds from its own git integration and
-      # needs nothing here. Fly is kept as a working alternative, so this deploys only when a
-      # token is actually configured rather than failing every push with a red X.
-      - name: Deploy to Fly.io when configured
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: |
-          if [ -z "$FLY_API_TOKEN" ]; then
-            echo "No FLY_API_TOKEN secret set -- skipping the Fly deploy."
-            exit 0
-          fi
-          flyctl deploy --remote-only
