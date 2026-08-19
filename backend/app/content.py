@@ -50,8 +50,8 @@ PROFILE = Profile(
         "convenience. The research I contribute to is about the harder version: deciding what "
         "a system is allowed to know before it is allowed to answer.",
         "I work on that with a team at Rutgers WINLAB, part of the NSF Center for Smart "
-        "Streetscapes, led by Prof. Jorge Ortiz and with PhD mentors Taqiya Ehsan and Shuren "
-        "Xia. My own contribution has been mostly on TeLLMe, the query system: I built the "
+        "Streetscapes, led by Prof. Jorge Ortiz and with PhD mentors including Taqiya "
+        "Ehsan. My own contribution has been mostly on TeLLMe, the query system: I built the "
         "frontend and the integration layer that binds a live instrumented room and the CARLA "
         "simulator to the query pipeline, and got those pieces working together end to end. "
         "Being the person who connects the parts turns out to be a good way to learn how all "
@@ -84,7 +84,7 @@ PROFILE = Profile(
 
 RESEARCH_CONTEXT = (
     "Collaborative research at Rutgers WINLAB with the NSF Center for Smart Streetscapes, "
-    "led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and Shuren Xia alongside other "
+    "led by Prof. Jorge Ortiz, with PhD mentors including Taqiya Ehsan alongside other "
     "graduate and undergraduate researchers."
 )
 
@@ -316,7 +316,7 @@ EXPERIENCE: list[ExperienceItem] = [
         location="WINLAB, Rutgers University",
         summary=(
             "Research on privacy-bounded smart-space query systems with Prof. Jorge Ortiz, "
-            "PhD mentors Taqiya Ehsan and Shuren Xia, and a team of graduate and undergraduate "
+            "PhD mentors including Taqiya Ehsan, and a team of graduate and undergraduate "
             "researchers."
         ),
         bullets=[

@@ -39,8 +39,10 @@ Accurate and specific is the goal.
 ## Attribution rules — important
 
 The TeLLMe and CityOS work is **collaborative research** at Rutgers WINLAB with the NSF
-Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors Taqiya Ehsan and
-Shuren Xia. Vihaan joined in 2026. It is **not** Vihaan's solo work.
+Center for Smart Streetscapes, led by Prof. Jorge Ortiz, with PhD mentors including Taqiya
+Ehsan. Vihaan joined in 2026. It is **not** Vihaan's solo work. Only Prof. Ortiz and Taqiya
+Ehsan are named on the site by choice; other mentors and researchers are referred to
+collectively. Do not add further individual names without asking.
 
 His actual contribution was the TeLLMe frontend plus the API integration layer binding the
 smart-room sensors and the CARLA simulator to the query pipeline, and getting the system
@@ -60,10 +62,12 @@ without Prof. Ortiz's permission. This repo only *describes* the research, which
 
 ## Still unconfirmed
 
-- Whether the named collaborators are happy to appear on a public site
-- Portrait is intentionally absent — About shows a "VR" monogram until
-  `frontend/public/portrait.jpg` exists
-- `vihaanrajagopal.com` is assumed in `index.html`, `robots.txt`, `sitemap.xml`
+- The site publishes as `vihaan-portfolio.fly.dev`, hardcoded in `index.html`, `robots.txt`
+  and `sitemap.xml`. Moving to a custom domain means editing those three, then `fly certs add`.
+
+Settled: Vihaan confirmed on 2026-08-18 that the named collaborators consent to appearing on
+the public site. The portrait is in place at `frontend/public/portrait.jpg`; the "VR" monogram
+is now only the `onError` fallback in `About.tsx`, so do not treat it as the intended state.
 
 ## Privacy
 

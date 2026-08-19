@@ -14,17 +14,14 @@ of the way. Light and dark themes are both first-class.
 Details are taken from `Vihaan_Rajagopal_Resume_2026.docx` and from Vihaan directly. What
 remains:
 
-- [ ] **Collaborator names** — the research projects publicly credit Prof. Jorge Ortiz and
-      PhD mentors Taqiya Ehsan and Shuren Xia. Confirm they are happy to be named on a public
-      site before it goes live.
-- [ ] **Portrait** — intentionally blank; the About section shows a "VR" monogram. Add
-      `frontend/public/portrait.jpg` when a photo exists.
+- [x] **Collaborator names** — the research projects publicly credit Prof. Jorge Ortiz and
+      PhD mentor Taqiya Ehsan; other mentors and researchers are referred to collectively.
+      Consent to be named on a public site confirmed by Vihaan on 2026-08-18.
+- [x] **Portrait** — `frontend/public/portrait.jpg` is in place; the "VR" monogram now only
+      shows if the image fails to load.
 - [ ] **Domain** — the site currently publishes as `vihaan-portfolio.fly.dev`, which is what
       `index.html`, `robots.txt` and `sitemap.xml` now point at. See *Deployment* for the
       switch to a custom domain.
-
-**Collaborator names are the one blocker that matters before sharing the URL widely** — the
-site is publicly reachable the moment it deploys, named mentors included.
 
 Confirmed and in place: name, email, location, GitHub, education, all seven experience
 entries, the WINLAB / NSF CS3 affiliation and 2026 start, project attribution, and the

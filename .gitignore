@@ -26,3 +26,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.tsbuildinfo
+
+# Claude Code worktrees and local session state.
+.claude/
