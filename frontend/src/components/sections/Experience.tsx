@@ -28,7 +28,7 @@ export function Experience({ items }: { items: ExperienceItem[] }) {
             </div>
 
             <div className="md:col-span-9">
-              <h3 className="text-h3 text-ink">{item.org}</h3>
+              <h2 className="text-h3 text-ink">{item.org}</h2>
               <p className="mt-1 text-[0.9375rem] font-medium text-accent">{item.role}</p>
               <p className="mt-4 max-w-[46rem] text-muted">{item.summary}</p>
 

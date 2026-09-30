@@ -12,31 +12,39 @@ import { cn } from "@/lib/cn";
 import type { Project } from "@/lib/types";
 
 /**
- * Column span for a card at position `index`.
+ * Column span for a card at position `index` of `total`.
  *
  * The first row is deliberately asymmetric (7 + 5) so the featured project reads as the lead;
  * every later row is an even 6 + 6. Giving all non-featured cards the same span would leave a
  * ragged two-column hole at the end of row two.
+ *
+ * Cards pair up after the first one at md and after the first two at lg, so whatever the count,
+ * one of those breakpoints ends on an unpaired card. That card takes the full row instead of
+ * leaving a half-width hole beside it.
  */
-function spanFor(index: number): string {
-  if (index === 0) return "md:col-span-12 lg:col-span-7";
-  if (index === 1) return "md:col-span-6 lg:col-span-5";
-  return "md:col-span-6 lg:col-span-6";
+function spanFor(index: number, total: number): string {
+  const isLast = index === total - 1;
+  const md = index === 0 || (isLast && total % 2 === 0) ? "md:col-span-12" : "md:col-span-6";
+  if (index === 0) return `${md} lg:col-span-7`;
+  if (index === 1) return `${md} lg:col-span-5`;
+  return `${md} ${isLast && total % 2 === 1 ? "lg:col-span-12" : "lg:col-span-6"}`;
 }
 
 function ProjectCard({
   project,
   featured,
   index,
+  total,
   delay,
 }: {
   project: Project;
   featured: boolean;
   index: number;
+  total: number;
   delay: number;
 }) {
   return (
-    <Reveal delay={delay} className={cn(spanFor(index))}>
+    <Reveal delay={delay} className={cn(spanFor(index, total))}>
       <Link
         to={`/projects/${project.slug}`}
         className="group flex h-full flex-col rounded-3xl border border-hairline bg-surface p-7 transition-all duration-300 ease-out hover:-translate-y-[3px] hover:border-hairline-strong hover:shadow-lift md:p-9"
@@ -46,9 +54,9 @@ function ProjectCard({
             <p className={cn("text-caption", accentTextClass(project.accent))}>
               {project.subtitle}
             </p>
-            <h3 className={cn("mt-3 font-semibold tracking-tight text-ink", featured ? "text-[1.75rem] leading-tight" : "text-h3")}>
+            <h2 className={cn("mt-3 font-semibold tracking-tight text-ink", featured ? "text-[1.75rem] leading-tight" : "text-h3")}>
               {project.title}
-            </h3>
+            </h2>
           </div>
           <ArrowUpRight
             size={20}
@@ -108,6 +116,7 @@ export function Work({ projects }: { projects: Project[] }) {
             project={project}
             featured={project.featured}
             index={index}
+            total={ordered.length}
             delay={index * 70}
           />
         ))}

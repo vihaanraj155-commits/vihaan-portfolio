@@ -25,6 +25,17 @@ editing text needs no frontend rebuild — just refresh. After editing content, 
 `npm run sync:content` from `frontend/` (backend must be up) to refresh the bundled offline
 snapshot at `frontend/src/content/fallback.json`.
 
+**Each nav item is its own page, not a stop on one long scroll** (Vihaan's request,
+2026-09-30). Home (`/`) is just the hero, one screen with no footer. `/work`, `/experience`,
+`/education`, `/skills`, `/about` and `/contact` are routes in `App.tsx`, wrapped by
+`pages/SectionPages.tsx`; project pages stay at `/projects/<slug>` and keep the Work tab lit.
+Old `/#section` links are forwarded by `Home.tsx`. Each page's `SectionHeading` is its h1, so
+headings inside a section start at h2. Add new pages to `public/sitemap.xml` too.
+
+Cybersecurity is deliberately understated (also 2026-09-30): Vihaan does not consider himself
+qualified there. CyberQuest reads as a team result and security appears as a "Currently
+Learning" line, not a skill group. Do not build it back up.
+
 Design tokens for both themes are in `frontend/src/index.css`. Themes switch on
 `<html data-theme>`, and Tailwind's `dark:` variant is redefined to match — do not assume
 `dark:` follows the OS.
@@ -71,6 +82,23 @@ describe collaborative research as if it were solo.
 Related: the actual CityOS/TeLLMe source repos are the lab's work and must not be published
 without Prof. Ortiz's permission. This repo only *describes* the research, which is fine.
 
+## Removed on purpose
+
+Waresport (a "Product & Growth Contributor" entry plus a sentence in the About bio) was removed
+on 2026-09-30. It is not on the 2026 résumé and Vihaan said much of it was inaccurate. Do not
+reintroduce it. More generally, the current résumé is the bar: if something is not on it, ask
+before putting it on the site.
+
+## RipRead
+
+RipRead is Vihaan's **independent** project (`context=None`); teammates only present the
+competition video. Its page deliberately has **no links**: the repo is private, and the live
+app is unlisted for competition judges -- the City of Long Branch allowed its camera frames in
+the demo and video only, so no camera frames on this site either. The research group that
+supplied the expert-labeled test set stays unnamed ("a university rip current research group")
+until it gives permission; no individual experts are named. Say "detection", never "the app
+detects rips", and keep the 1-in-9 / 2-in-3 pair together.
+
 ## Still unconfirmed
 
 - The production hostname is assumed to be `vihaan-portfolio.pages.dev`, the Cloudflare
@@ -91,7 +119,8 @@ Because the number was the entire reason the repo had to stay private, that cons
 too: the history no longer needs rewriting before the repo can be made public. Whether to make
 it public is still Vihaan's call, not an inference to act on.
 
-The PDF is generated from `Vihaan_Rajagopal_Resume_2026.docx` via Word, and lives in two places
+The PDF is generated from `Vihaan_Rajagopal_Resume_2026.docx` via Word (last regenerated
+2026-09-30 from the version that adds RipRead and drops Waresport), and lives in two places
 — `backend/static/resume.pdf` and `frontend/public/resume.pdf`. Regenerate to the first, copy to
 the second; `test_public_resume_matches_backend_copy` fails on drift.
 

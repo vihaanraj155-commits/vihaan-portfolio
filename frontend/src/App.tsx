@@ -6,6 +6,14 @@ import { Header } from "@/components/layout/Header";
 import { Home } from "@/pages/Home";
 import { NotFound } from "@/pages/NotFound";
 import { ProjectDetail } from "@/pages/ProjectDetail";
+import {
+  AboutPage,
+  ContactPage,
+  EducationPage,
+  ExperiencePage,
+  SkillsPage,
+  WorkPage,
+} from "@/pages/SectionPages";
 import { SiteProvider } from "@/lib/site-context";
 
 /**
@@ -24,6 +32,9 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  // Home is a single screen with nothing below it, so it leaves the footer off.
+  const { pathname } = useLocation();
+
   return (
     <SiteProvider>
       <a
@@ -39,12 +50,18 @@ export default function App() {
       <main id="main">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/work" element={<WorkPage />} />
+          <Route path="/experience" element={<ExperiencePage />} />
+          <Route path="/education" element={<EducationPage />} />
+          <Route path="/skills" element={<SkillsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-      <Footer />
+      {pathname === "/" ? null : <Footer />}
     </SiteProvider>
   );
 }

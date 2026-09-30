@@ -10,7 +10,7 @@
   <g font-family="Inter, Helvetica, Arial, sans-serif" fill="#1d1d1f">
     <text x="90" y="250" font-size="88" font-weight="600" letter-spacing="-3.5">Vihaan Rajagopal</text>
     <text x="90" y="320" font-size="34" font-weight="400" letter-spacing="-0.6" fill="#5a5a5f">Student Researcher &amp; Developer</text>
-    <text x="90" y="400" font-size="26" font-weight="400" fill="#6e6e73">Smart spaces, security, and applied AI.</text>
+    <text x="90" y="400" font-size="26" font-weight="400" fill="#6e6e73">Smart spaces, computer vision, and applied AI.</text>
   </g>
   <rect x="90" y="470" width="64" height="4" rx="2" fill="#0071e3"/>
 </svg>

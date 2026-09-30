@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpRight, Download } from "lucide-react";
+import { ArrowUpRight, Download } from "lucide-react";
 
 import { Container, LinkButton, Reveal } from "@/components/ui/primitives";
 import { resumeUrl } from "@/lib/api";
@@ -6,7 +6,8 @@ import type { Profile } from "@/lib/types";
 
 export function Hero({ profile }: { profile: Profile }) {
   return (
-    <section className="relative overflow-hidden pt-40 pb-24 md:pt-52 md:pb-36">
+    // Home is this one screen: the rest of the site is on its own pages, reached from the nav.
+    <section className="relative flex min-h-svh items-center overflow-hidden pt-28 pb-16">
       {/*
         One soft accent bloom, nothing else. Restraint here is what separates this from the
         animated-gradient look that reads as a template.
@@ -47,11 +48,11 @@ export function Hero({ profile }: { profile: Profile }) {
 
         <Reveal delay={260}>
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <LinkButton href="#work" variant="primary">
+            <LinkButton href="/work" internal variant="primary">
               View work
               <ArrowUpRight size={16} aria-hidden />
             </LinkButton>
-            <LinkButton href="#contact" variant="secondary">
+            <LinkButton href="/contact" internal variant="secondary">
               Get in touch
             </LinkButton>
             <LinkButton href={resumeUrl} variant="ghost" download>
@@ -59,16 +60,6 @@ export function Hero({ profile }: { profile: Profile }) {
               Résumé
             </LinkButton>
           </div>
-        </Reveal>
-
-        <Reveal delay={340}>
-          <a
-            href="#work"
-            className="mt-20 hidden items-center gap-2 text-[0.8125rem] text-fade transition-colors hover:text-muted md:inline-flex"
-          >
-            <ArrowDown size={14} aria-hidden />
-            Scroll to explore
-          </a>
         </Reveal>
       </Container>
     </section>

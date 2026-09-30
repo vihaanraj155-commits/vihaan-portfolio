@@ -56,9 +56,9 @@ function EmailPanel({ profile }: { profile: Profile }) {
   return (
     <div className="rounded-3xl border border-hairline bg-surface p-7 md:p-9">
       <Mail size={20} aria-hidden className="text-accent" />
-      <h3 className="mt-5 text-[1.25rem] font-semibold tracking-tight text-ink">
+      <h2 className="mt-5 text-[1.25rem] font-semibold tracking-tight text-ink">
         Send me an email
-      </h3>
+      </h2>
       <p className="mt-3 max-w-[46ch] text-[0.9375rem] leading-[1.7] text-muted">
         The quickest way to reach me. I read everything and reply to anything that is not a
         cold sales pitch.

@@ -32,7 +32,7 @@ PROFILE = Profile(
     name="Vihaan Rajagopal",
     initials="VR",
     role="Student Researcher & Developer",
-    tagline="I build systems for smart spaces that are secure and private by design.",
+    tagline="I build systems for smart spaces that are private by design.",
     hero_line=(
         "I am a high school researcher working on smart-street and smart-room systems — "
         "the kind that can answer useful questions about a space without giving away who "
@@ -40,8 +40,8 @@ PROFILE = Profile(
     ),
     bio_short=(
         "I work on smart-space research at Rutgers WINLAB with the NSF Center for Smart "
-        "Streetscapes, compete in cybersecurity and robotics, and build the software that "
-        "turns research systems into something people can actually use."
+        "Streetscapes, compete in robotics, and build the software that turns research "
+        "systems into something people can actually use."
     ),
     bio_long=[
         "A room or a street full of sensors can answer a remarkable number of useful "
@@ -58,13 +58,12 @@ PROFILE = Profile(
         "browser. On the planner side I widened the library of pre-verified templates that "
         "lets common requests skip a full model-checking run. Being the person who connects "
         "the parts turns out to be a good way to learn how all of them work.",
-        "Outside the lab I spend a lot of time in cybersecurity labs — reverse engineering, "
-        "Linux internals, memory and binary analysis — because understanding how systems fail "
-        "is the fastest way to learn to build ones that do not. I also write the control "
-        "software for my school's competition robot, contribute product and engineering work "
-        "to a sports platform used by hundreds of athletes and coaches, and have played Indian "
-        "classical violin for eight years, which is better training in pattern recognition and "
-        "real-time adaptation than anything else I do.",
+        "Outside the lab I am building RipRead, an independent project that sets beach camera "
+        "footage beside the official rip current forecast, and I write the control software "
+        "for my school's competition robot. I have also been learning security basics "
+        "through hands-on labs, mostly to understand how the things I build could break. And "
+        "I have played Indian classical violin for eight years, which is better training in "
+        "pattern recognition and real-time adaptation than anything else I do.",
     ],
     location="Edison, New Jersey, United States",
     email="vihaanraj155@gmail.com",
@@ -74,7 +73,7 @@ PROFILE = Profile(
         SocialLink(label="Email", url="mailto:vihaanraj155@gmail.com", icon="email"),
     ],
     quick_facts=[
-        QuickFact(label="Focus", value="Smart spaces, security, applied AI"),
+        QuickFact(label="Focus", value="Smart spaces, computer vision, applied AI"),
         QuickFact(label="Working in", value="Python, TypeScript, Java"),
         QuickFact(label="Based in", value="Edison, NJ"),
     ],
@@ -152,6 +151,102 @@ PROJECTS: list[Project] = [
             "privacy-filtered before anyone can see them.",
         ],
         stack=["Next.js", "React", "TypeScript", "Tailwind CSS", "Python", "CARLA"],
+        links=[],
+    ),
+    # Links deliberately empty: the repository is private, and the live app is unlisted --
+    # the City of Long Branch allowed its camera frames in the demo and video only. No camera
+    # frames on this site either. The research group behind the test set is not named until
+    # it gives permission.
+    Project(
+        slug="ripread",
+        title="RipRead",
+        subtitle="Rip current risk monitoring",
+        year="Sept 2026 — Present",
+        role="Independent research & full-stack development",
+        featured=False,
+        accent="blue",
+        context=None,
+        summary=(
+            "A web app that pairs computer-vision analysis of beach camera footage with "
+            "archived National Weather Service forecasts, aimed at the hours when no lifeguard "
+            "is on duty on New Jersey beaches."
+        ),
+        contribution=[
+            "Trained and evaluated a YOLO11s-seg segmentation model on RipVIS, a public rip "
+            "current dataset.",
+            "Built an evaluation pipeline that matched the dataset authors' reference scripts "
+            "exactly.",
+            "Ran pre-registered experiments, including a comparison of the lifeguards' busiest "
+            "rescue days against quiet days.",
+            "Found a generalization gap on 203 expert-labeled photos from 16 unfamiliar "
+            "cameras: about 2 in 3 rips found on familiar footage, about 1 in 9 on unfamiliar "
+            "cameras.",
+            "Consulted 10+ domain experts, securing 2,700+ frames of camera footage and an "
+            "expert-labeled test set.",
+            "Automated NOAA forecast and buoy archiving with GitHub Actions, and deployed the "
+            "web app with automated post-deploy checks.",
+        ],
+        highlights=[
+            "One official forecast covers twelve beaches; RipRead shows each one beside what "
+            "the camera sees and flags the moments they disagree for a person to check.",
+            "Replays recorded footage against the forecast that was actually in force at each "
+            "moment, from an archive that grows every three hours.",
+            "Model boxes are labeled \"detection\", never \"rip\", unless an expert has "
+            "confirmed them.",
+            "Every camera frame in the app was checked by hand for identifiable people.",
+            "The model is exported to ONNX and can run in the browser through ONNX Runtime "
+            "Web, with a parity check against the Python pipeline.",
+            "A scripted post-deploy check verifies the live site after each release, down to "
+            "the map tiles.",
+        ],
+        body=[
+            "Rip currents are the leading surf hazard in the U.S., and many drownings happen "
+            "when no lifeguard is on duty — early morning, evening, and off-season. Most New "
+            "Jersey beaches take their lifeguards off between 5 and 6 pm, and Long Branch Ocean "
+            "Rescue told me most drownings happen between 5 and 8. Official surf-zone forecasts "
+            "cover whole stretches of coast at once and are built from offshore wave data and "
+            "the tide, so they can't see local conditions at a specific beach — like the dip in "
+            "a sandbar where a rip actually forms.",
+            "RipRead is a web app that pairs computer-vision analysis of beach camera footage "
+            "with archived National Weather Service forecasts, aimed at those unguarded hours "
+            "on New Jersey beaches. On the Monmouth County coast, the official forecast gives "
+            "one risk level for twelve beaches from Sea Bright to Manasquan. RipRead shows each "
+            "of them with the forecast that was in force at that moment, adds what the camera "
+            "sees where there is one, and flags the moments the two disagree for a person to "
+            "check. A GitHub Actions workflow archives the forecast and offshore buoy data every "
+            "three hours, so the app replays recorded footage against the forecast that was "
+            "actually issued at the time. Detecting rips from webcams isn't new — NOAA's WebCOOS "
+            "network and the RipFinder app both do it — so what RipRead adds is the comparison "
+            "with the official forecast.",
+            "I trained and evaluated a segmentation model (YOLO11s-seg) on RipVIS, a public rip "
+            "current dataset. Before trusting any number, I built an evaluation pipeline and "
+            "checked that it matched the dataset authors' reference scripts exactly, and I "
+            "wrote down each experiment's plan before running it. One compared the lifeguards' "
+            "busiest rescue days against quiet days: the forecast's risk level didn't tell them "
+            "apart, reading LOW on most days of the summer, busy or quiet.",
+            "The biggest result came from testing on an expert-labeled dataset: 203 photos from "
+            "16 beach cameras the model had never seen, each with the rip marked by an expert. "
+            "The model found about 1 in 9 of those rips, against about 2 in 3 on footage like "
+            "what it was trained on. Every real deployment is a camera the model has never "
+            "seen, so closing that generalization gap is the next stage of the project.",
+            "Along the way I consulted more than ten domain experts, including coastal "
+            "scientists at the U.S. Army Corps of Engineers, UC Santa Cruz, Monmouth University "
+            "and NY Sea Grant, and Long Branch Ocean Rescue, whose lifeguards named their "
+            "busiest rescue days, explained what their rips look like, and reviewed clips from "
+            "the camera. The City of Long Branch shared more than 2,700 frames from one of its "
+            "beach cameras, and a university rip current research group shared the "
+            "expert-labeled test set. Every frame the app shows was checked by hand for "
+            "identifiable people before it went in, which was the condition for using the "
+            "footage.",
+        ],
+        stack=[
+            "Python",
+            "JavaScript",
+            "Leaflet",
+            "ONNX Runtime Web",
+            "GitHub Actions",
+            "Cloudflare Pages",
+        ],
         links=[],
     ),
     Project(
@@ -347,27 +442,6 @@ EXPERIENCE: list[ExperienceItem] = [
         tags=["Smart Spaces", "Privacy", "Systems Integration", "React", "Python"],
     ),
     ExperienceItem(
-        org="Waresport",
-        role="Product & Growth Contributor",
-        period="December 2025 — Present",
-        location=None,
-        summary=(
-            "Product and engineering work on an all-in-one sports management platform used by "
-            "500+ athletes, coaches, and administrators."
-        ),
-        bullets=[
-            "Led product iteration cycles by identifying user pain points in scheduling, "
-            "payments, and communication workflows, improving usability and feature adoption.",
-            "Designed and refined core features — event scheduling, registration flows, "
-            "communication tools — reducing administrative friction by roughly 60%.",
-            "Drove user growth and onboarding across multiple teams and clubs, contributing to "
-            "platform expansion and retention.",
-            "Worked closely with engineering to translate user needs into scalable features "
-            "and system requirements.",
-        ],
-        tags=["Product", "Growth", "Systems Design"],
-    ),
-    ExperienceItem(
         org="VEX Robotics Competition",
         role="Engineering, Programming & Systems Optimization",
         period="August 2025 — Present",
@@ -389,21 +463,19 @@ EXPERIENCE: list[ExperienceItem] = [
     ),
     ExperienceItem(
         org="Lockheed Martin CyberQuest",
-        role="Competitor — Cybersecurity & Reverse Engineering",
+        role="Team Participant",
         period="March 2026",
         location=None,
         summary=(
-            "State-level cybersecurity competition covering reverse engineering, Linux "
-            "systems, and network analysis."
+            "A state-level team cybersecurity competition, with challenges in reverse "
+            "engineering, Linux, and networking."
         ),
         bullets=[
-            "Ranked 5th in the state, in the top ~25% of competing teams.",
-            "Solved 10+ challenges spanning reverse engineering, Linux internals, and network "
-            "analysis.",
-            "Applied binary analysis, debugging, and exploitation techniques under "
-            "time-constrained conditions.",
+            "Our team placed 5th in the state, in the top ~25% of competing teams.",
+            "Worked through 10+ challenges as a team, covering reverse engineering, Linux, and "
+            "network analysis.",
         ],
-        tags=["Cybersecurity", "Reverse Engineering", "Linux"],
+        tags=["Cybersecurity", "Team competition"],
     ),
     ExperienceItem(
         org="Blue Ocean Entrepreneurship Competition",
@@ -505,25 +577,23 @@ SKILLS: list[SkillGroup] = [
         ],
     ),
     SkillGroup(
-        title="Security",
-        caption="Learning how systems fail",
+        title="AI & Research",
+        caption="Models, and checking whether they actually work",
         items=[
-            "Penetration testing concepts",
-            "Reverse engineering & binary analysis",
-            "Linux internals & system hardening",
-            "Network analysis",
-            "25+ labs on Hack The Box and TryHackMe",
+            "Computer vision (YOLO segmentation)",
+            "Model evaluation & pre-registered experiments",
+            "LLM integration & tool-calling",
+            "Structured output & schema validation",
+            "Applied AI inside real products",
         ],
     ),
     SkillGroup(
-        title="Cloud & AI",
+        title="Currently Learning",
         caption="Where most of my study time goes",
         items=[
             "AWS (certifications in progress)",
             "Cloud architecture & distributed systems",
-            "LLM integration & tool-calling",
-            "Structured output & schema validation",
-            "Applied AI inside real products",
+            "Security basics, through 25+ hands-on labs on Hack The Box and TryHackMe",
         ],
     ),
 ]

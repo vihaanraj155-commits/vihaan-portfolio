@@ -17,7 +17,7 @@ export function Education({ items }: { items: EducationItem[] }) {
           >
             <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
               <div>
-                <h3 className="text-h3 text-ink">{item.school}</h3>
+                <h2 className="text-h3 text-ink">{item.school}</h2>
                 <p className="mt-1 text-[0.9375rem] font-medium text-accent">
                   {item.credential}
                 </p>

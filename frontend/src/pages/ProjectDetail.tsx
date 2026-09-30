@@ -10,18 +10,20 @@ import {
   accentTextClass,
 } from "@/components/ui/primitives";
 import { cn } from "@/lib/cn";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import { useSite } from "@/lib/site-context";
 
 export function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { content, status } = useSite();
 
+  // Read from the already-loaded site payload rather than fetching again.
+  const project = content?.projects.find((item) => item.slug === slug);
+  useDocumentTitle(project?.title);
+
   if (status === "loading" || !content) {
     return <PageSkeleton />;
   }
-
-  // Read from the already-loaded site payload rather than fetching again.
-  const project = content.projects.find((item) => item.slug === slug);
 
   if (!project) {
     return (
@@ -46,7 +48,7 @@ export function ProjectDetail() {
       <Container>
         <Reveal>
           <Link
-            to="/#work"
+            to="/work"
             className="inline-flex items-center gap-2 text-[0.875rem] text-muted transition-colors hover:text-ink"
           >
             <ArrowLeft size={15} aria-hidden />

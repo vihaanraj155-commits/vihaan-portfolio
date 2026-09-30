@@ -11,8 +11,13 @@ export function Writing({ items }: { items: WritingItem[] }) {
   if (items.length === 0) return null;
 
   return (
-    <Section id="writing" labelledBy="writing-heading">
-      <SectionHeading id="writing-heading" eyebrow="Writing" title="Notes and essays" />
+    <Section id="writing" labelledBy="writing-heading" bordered>
+      <SectionHeading
+        id="writing-heading"
+        eyebrow="Writing"
+        title="Notes and essays"
+        level={2}
+      />
 
       <ul className="mt-14">
         {items.map((item, index) => (

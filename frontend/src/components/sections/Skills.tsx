@@ -10,7 +10,7 @@ export function Skills({ groups }: { groups: SkillGroup[] }) {
         id="skills-heading"
         eyebrow="Capabilities"
         title="What I work with"
-        description="Tools are means, not identity — but these are the ones I reach for without thinking."
+        description="Tools are means, not identity — but these are the ones I use, and the ones I am still learning."
       />
 
       <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -20,7 +20,7 @@ export function Skills({ groups }: { groups: SkillGroup[] }) {
             delay={index * 70}
             className="rounded-3xl border border-hairline bg-surface p-7 md:p-8"
           >
-            <h3 className="text-h3 text-ink">{group.title}</h3>
+            <h2 className="text-h3 text-ink">{group.title}</h2>
             <p className="mt-1.5 text-[0.875rem] text-fade">{group.caption}</p>
 
             <ul className="mt-6 space-y-3">

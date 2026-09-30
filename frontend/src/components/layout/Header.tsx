@@ -8,17 +8,24 @@ import { useTheme } from "@/lib/use-theme";
 
 interface NavItem {
   label: string;
-  hash: string;
+  to: string;
 }
 
+// Each item is its own page, so the nav behaves like tabs rather than jump links.
 const NAV: NavItem[] = [
-  { label: "Work", hash: "#work" },
-  { label: "Experience", hash: "#experience" },
-  { label: "Education", hash: "#education" },
-  { label: "Capabilities", hash: "#skills" },
-  { label: "About", hash: "#about" },
-  { label: "Contact", hash: "#contact" },
+  { label: "Work", to: "/work" },
+  { label: "Experience", to: "/experience" },
+  { label: "Education", to: "/education" },
+  { label: "Capabilities", to: "/skills" },
+  { label: "About", to: "/about" },
+  { label: "Contact", to: "/contact" },
 ];
+
+/** Project detail pages live under Work, so they keep that tab lit. */
+function isActive(item: NavItem, pathname: string): boolean {
+  if (item.to === "/work" && pathname.startsWith("/projects/")) return true;
+  return pathname === item.to;
+}
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
@@ -42,7 +49,6 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const onHome = location.pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -75,9 +81,6 @@ export function Header() {
   const initials = content?.profile.initials ?? "VR";
   const name = content?.profile.name ?? "Vihaan Rajagopal";
 
-  // On a project page the hash links must return home first, or they resolve to nothing.
-  const href = (hash: string) => (onHome ? hash : `/${hash}`);
-
   return (
     <header
       className={cn(
@@ -98,16 +101,29 @@ export function Header() {
 
         <nav aria-label="Sections" className="hidden md:block">
           <ul className="flex items-center gap-8">
-            {NAV.map((item) => (
-              <li key={item.hash}>
-                <a
-                  href={href(item.hash)}
-                  className="text-[0.875rem] text-muted transition-colors duration-200 hover:text-ink"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {NAV.map((item) => {
+              const active = isActive(item, location.pathname);
+              return (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "relative text-[0.875rem] transition-colors duration-200",
+                      active ? "text-ink" : "text-muted hover:text-ink",
+                    )}
+                  >
+                    {item.label}
+                    {active ? (
+                      <span
+                        aria-hidden
+                        className="absolute inset-x-0 -bottom-1.5 h-0.5 rounded-full bg-accent"
+                      />
+                    ) : null}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -129,21 +145,28 @@ export function Header() {
         <div className="fixed inset-0 top-14 z-40 bg-canvas md:hidden">
           <nav aria-label="Sections" className="px-6 pt-6">
             <ul className="flex flex-col">
-              {NAV.map((item, index) => (
-                <li
-                  key={item.hash}
-                  className="reveal-shown border-b border-hairline"
-                  style={{ transitionDelay: `${index * 45}ms` }}
-                >
-                  <a
-                    href={href(item.hash)}
-                    onClick={() => setMenuOpen(false)}
-                    className="block py-5 text-2xl font-semibold tracking-tight text-ink"
+              {NAV.map((item, index) => {
+                const active = isActive(item, location.pathname);
+                return (
+                  <li
+                    key={item.to}
+                    className="reveal-shown border-b border-hairline"
+                    style={{ transitionDelay: `${index * 45}ms` }}
                   >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+                    <Link
+                      to={item.to}
+                      aria-current={active ? "page" : undefined}
+                      onClick={() => setMenuOpen(false)}
+                      className={cn(
+                        "block py-5 text-2xl font-semibold tracking-tight",
+                        active ? "text-accent" : "text-ink",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </div>

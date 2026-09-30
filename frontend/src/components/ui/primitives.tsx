@@ -21,11 +21,15 @@ export function Container({
   );
 }
 
+/**
+ * Every section is its own page, so by default a Section opens the page: top padding clears
+ * the fixed header. `bordered` is for a secondary section further down the same page.
+ */
 export function Section({
   id,
   children,
   className,
-  bordered = true,
+  bordered = false,
   labelledBy,
 }: {
   id?: string;
@@ -39,8 +43,7 @@ export function Section({
       id={id}
       aria-labelledby={labelledBy}
       className={cn(
-        "py-24 md:py-36",
-        bordered && "border-t border-hairline",
+        bordered ? "border-t border-hairline py-24 md:py-32" : "pt-32 pb-24 md:pt-40 md:pb-32",
         className,
       )}
     >
@@ -77,23 +80,28 @@ export function Reveal({
    Headings
    --------------------------------------------------------------------------------------- */
 
+/** The page's own heading by default (h1); pass `level={2}` for a secondary section. */
 export function SectionHeading({
   id,
   eyebrow,
   title,
   description,
+  level = 1,
 }: {
   id?: string;
   eyebrow: string;
   title: string;
   description?: string;
+  level?: 1 | 2;
 }) {
+  const Heading = level === 1 ? "h1" : "h2";
+
   return (
     <Reveal className="max-w-[46rem]">
       <p className="text-caption text-accent">{eyebrow}</p>
-      <h2 id={id} className="text-h2 mt-4 text-ink">
+      <Heading id={id} className="text-h2 mt-4 text-ink">
         {title}
-      </h2>
+      </Heading>
       {description ? <p className="text-lead mt-5 text-muted">{description}</p> : null}
     </Reveal>
   );
